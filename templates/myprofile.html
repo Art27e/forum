@@ -1,0 +1,27 @@
+{{ define "myprofile" }}
+
+{{ template "header" . }}
+
+<!--Profile page is under development -->
+
+<script type="text/javascript"> 
+    newPageTitle = 'Forum | '+ '{{.Username}} Profile';
+    document.title = newPageTitle;
+</script>
+
+{{ if .IsLoggedIn }}
+<img src="../img/avatar.png" alt="user avatar" class="avatar">
+<p class="user-name"> {{ .Username }} </p>
+<p>Your ID: {{ .UserId }} </p>
+<br>
+Change password <p style="color:orange;">Function is under development</p>
+Total Posts: <p style="color:orange;">Function is under development</p>
+{{ else }}
+<p>Please log in</p>
+You are not logged in. You are viewing profile page of: {{ .Username }}. User ID: {{ .UserId }}
+
+{{ end }}
+
+{{ template "footer" }}
+
+{{ end }}

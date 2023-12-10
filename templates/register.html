@@ -1,0 +1,36 @@
+{{ define "registration" }}
+
+{{ template "header" . }}
+
+<script type="text/javascript"> 
+    newPageTitle = 'Forum | Register';
+    document.title = newPageTitle;
+</script>
+
+{{ if .WarningMessage}}
+<p class="warning-msg">Please try again. Disallowed symbols were used in nickname/password. Only numbers and letters are allowed</p>
+{{ end }}
+
+{{ if .UserExists }}
+<p class="warning-msg">User or email already exists</p>
+{{ end }}
+
+{{ if not .IsLoggedIn }}
+<div class="register-form">
+    <form action="/register_user" method="post">
+        <input type="text" name="username" id="username" minlength="6" maxlength="15" required placeholder="Username">
+        <br>
+        <input type="password" name="password" id="password" minlength="6" maxlength="15" required placeholder="Password">
+        <br>
+        <input type="email" name="email" id="email" minlength="8" maxlength="30" required placeholder="Email">
+        <br>
+        <button class="website-button" type="submit">Submit</button>
+    </form>
+</div>
+{{ else }}
+<p class="warning-msg">Already logged in</p>
+{{ end }}
+
+{{ template "footer" }}
+
+{{ end }}

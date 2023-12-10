@@ -1,0 +1,56 @@
+{{ define "thread" }}
+
+{{ template "header" . }}
+
+{{ with index .Messages 0}}
+<script type="text/javascript">
+    newPageTitle = 'Forum |' + ' {{.ThreadTitle}}';
+    document.title = newPageTitle;
+</script>
+{{ end }}
+
+<button class="website-button" onclick="location.href='/forum/{{.MainThreadId}}'">Go Back</button>
+
+{{ with index .Messages 0}}
+<h2 class="thread-title">{{ .ThreadTitle }}</h2>
+{{ end }}
+<div class="center">
+<div class="messages">
+    <hr id="msg-sep">
+    {{ range .Messages }}
+    <div style="margin-top: 0; padding-top: 0; display: flex; justify-content: space-between; align-items: center; font-size: 20px; color: rgb(66, 206, 15);">
+        <p><a style="margin-top:0; padding-top: 0; text-decoration: none; color: rgb(66, 206, 15);" href="/acc/profile/{{.AuthorID}}">{{ .Author}}</a></p>
+        {{ if .CheckHost }}
+        <p style="font-size: 12px;"><a style="color: aliceblue;" href="/post/{{.Id}}/edit">Edit Post</p></a>
+        {{ end }}
+        <div class="like-posts">
+            <form action="/like/{{.Id}}" method="post" autocomplete="off">
+                <button class="like-btn" style="color:blue; background: none; margin-right: 10px;" type="submit">+</button>
+                </form>
+            <p style="color: rgb(239, 177, 152); font-size: 15px; letter-spacing: 1px;"><b>Likes: {{ .Likes }}</b></p>
+            <form action="/removelike/{{.Id}}" method="post" autocomplete="off">
+            <button class="like-btn" style="color:blue; background: none; margin-left: 10px;" type="submit">-</button>
+            </form>
+        </div>
+        <p style="margin-top: 0; padding-top: 0; font-size: 12px; color:rgb(185, 185, 185);">{{.LastPostTime}}</p>
+    </div>
+     <p style="padding-left: 40px; width: 100%; font-size: 16px; text-align: left; overflow-wrap: break-word;">{{ .Body }} </p>
+     <hr id="msg-sep">
+    {{ end }}
+</div>
+{{ if .IsLoggedIn }}
+<form action="/post" method="post" autocomplete="off">
+    <div class="reply-form">
+    <textarea rows="4" name="msg" id="msg" minlength="4" maxlength="1300" required placeholder="Write text here..."></textarea>
+    <button class="website-button" type="submit">Add Post</button>
+</div>
+</form>
+{{ else }}
+<p style="color:red;">You cant send messages. Need to login.</p>
+<br>
+{{ end }}
+</div>
+
+{{ template "footer" }}
+
+{{ end }}

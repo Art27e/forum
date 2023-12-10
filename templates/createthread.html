@@ -1,0 +1,30 @@
+{{ define "create_thread" }}
+
+{{ template "header" . }}
+
+<script type="text/javascript"> 
+    newPageTitle = 'Forum | Start New Topic';
+    document.title = newPageTitle;
+</script>
+
+
+{{ if .IsLoggedIn }}
+<section id="create-thread">
+<form action="/create-thread" method="post">
+    <p class="text-make-thread">Topic name (min chars: 6):</p>
+    <textarea name="topic" id="topic" minlength="6" maxlength="20" required placeholder="Write topic name here.."></textarea>
+    <p class="text-make-thread">Message (min chars: 4):</p>
+    <textarea rows="4" name="msg-create" id="msg-create" minlength="4" maxlength="350" required placeholder="Write text here..."></textarea>
+    <br>
+    <button class="website-button" type="submit">Make a topic</button>
+</form>
+</section>
+{{ else }}
+<p style="color:red">You are not logged in</p>
+<form action="/login" method="get">
+    <button class="website-button" type="submit">Login</button>
+</form>
+{{ end }}
+{{ template "footer" }}
+
+{{ end }}

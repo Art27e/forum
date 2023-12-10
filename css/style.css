@@ -1,0 +1,433 @@
+/*////////////////////////////////////////////////////////*/
+/* common */
+html {
+    box-sizing: border-box;
+    padding: 0 60px;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+body {
+    color: white;
+    font-family: 'Lato';
+    background-image: url(/img/background.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+@font-face {
+    font-family: 'Sacramento';
+    src: url(/fonts/Sacramento-Regular.ttf) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.website-button {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    height:45px;
+    width:120px;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: 3px solid #4CAF50;
+}
+
+.website-button:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.warning-msg {
+    color: red;
+    font-size: 14px;
+}
+
+a {
+    text-decoration: none;
+}
+/*////////////////////////////////////////////////////////*/
+
+/*////////////////////////////////////////////////////////*/
+/* header.html */
+.site-header {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 10px;
+}
+
+.logo {
+    color: yellow;
+    text-decoration: none;
+    font-style: normal;
+    font-weight: 900;
+}
+
+.navigation-bar {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 29px;
+    margin-bottom: 29px;
+    justify-content: space-between;
+}
+
+nav .navigation-link {
+    color: white;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0;
+    margin-right: 20px;
+    font-size: 16px;
+    line-height: 30px;
+}
+
+.navigation-link:last-child {
+    margin-right: 0;
+}
+/*////////////////////////////////////////////////////////*/
+
+/*////////////////////////////////////////////////////////*/
+/* footer.html */
+.site-footer {
+    font-style: normal;
+    background-color: #00376a;
+    font-size: 16px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 10px;
+    margin-top: auto;
+    border: 2px solid white;
+    position: relative;
+    opacity: 0.8;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+.ae-logo1, .ae-logo2 {
+    font-family: 'Sacramento';
+    font-weight: 400;
+    font-style: normal;
+    color: white;
+    font-size: 19px;
+    position: absolute;
+    top: 0;
+    margin-top: 10px;
+}
+
+.ae-logo1 {
+    left: 0;
+    padding-left: 10px;
+}
+
+.ae-logo2 {
+    right: 0;
+    padding-right: 10px;
+}
+/*////////////////////////////////////////////////////////*/
+
+/*////////////////////////////////////////////////////////*/
+/* index.html and threads.html */
+.avatar-mainpage {
+    width: 2%;
+    height: 2%;
+}
+
+.welcome-message {
+    margin-bottom: 50px;
+    height: 50px;
+}
+
+.welcome-msg {
+    font-size: 18px;
+    color: red;
+}
+
+.show-all-threads {
+    background-color: grey;
+    opacity: 0.8;
+    border-radius: 25px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+.thread-form-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.thr-name {
+    display: flex;
+    flex-wrap: wrap;
+    width: 50%;
+}
+
+.threads-title {
+    color: rgb(2, 2, 81);
+    margin-left: 20px;
+    margin-right: 10px;
+    padding-bottom: 10px;
+}
+
+.thr-description {
+    font-size: 13px;
+    position: absolute;
+    margin-top: 60px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+.count-posts {
+    flex-basis: auto;
+    font-size: 14px;
+    text-align: center;
+    width: 20%;
+}
+
+.like-posts {
+    display: flex; 
+    align-items: center;
+}
+
+.last-posts {
+    text-align: right;
+    font-size: 12px;
+    margin-right: 10px;
+    width: 20%;
+}
+
+#threadname-sub { /* thread-title for threads.html */
+    font-size: 12px;
+    font-weight: 500;
+}
+/*////////////////////////////////////////////////////////*/
+
+/*////////////////////////////////////////////////////////*/
+/* myprofile.html and profile.html */
+.user-name {
+    font-size: 22px;
+    color: red;
+}
+
+.avatar {
+    width: 10%;
+    height: 10%;
+}
+/*////////////////////////////////////////////////////////*/
+
+/*////////////////////////////////////////////////////////*/
+/* login.html and register.html */
+.login-form {
+    margin: 0 auto;
+    width: 50%;
+    height: 170px;
+    text-align: center;
+    background-color: transparent;
+    border: 2px solid;
+    border-color: blue;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.register-form {
+    margin: 0 auto;
+    width: 50%;
+    height: 200px;
+    text-align: center;
+    background-color: transparent;
+    border: 2px solid;
+    border-color: blue;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+/*////////////////////////////////////////////////////////*/
+
+/*////////////////////////////////////////////////////////*/
+/* input */
+#username {
+    margin-bottom: 10px;
+    height: 25px;
+}
+
+#password {
+    height: 25px;
+}
+
+#email {
+    margin-top: 10px;
+    height: 25px;
+}
+/*////////////////////////////////////////////////////////*/
+
+/*////////////////////////////////////////////////////////*/
+/* createthread.html */
+#create-thread {
+    width: 100%;
+    height: 100%;
+    border: 3px solid white;
+    margin: 0 auto;
+    text-align: center;
+    background-color: transparent;
+    padding-top: 25px;
+}
+
+.text-make-thread {
+    color: rgb(52, 255, 82);
+}
+/*////////////////////////////////////////////////////////*/
+
+/*////////////////////////////////////////////////////////*/
+/* textarea for createthread.html */
+#topic {
+    width: 25%;
+    height: 50px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    resize: none;
+    margin-bottom: 10px;
+}
+
+#topic::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+#msg-create {
+    width: 60%;
+    height: 140px;
+    border: 1px solid #ccc;
+    resize: none;
+}
+
+#msg-create::placeholder {
+    color: #999;
+    font-style: italic;
+}
+/*////////////////////////////////////////////////////////*/
+
+/*////////////////////////////////////////////////////////*/
+/* thread.html */
+.thread-title {
+    color: white;
+    font-size: 27px;
+}
+
+.center {
+    width: 100%;
+}
+
+.center > * {
+    margin: 0 10px;
+}
+
+.messages {
+    width: 99%;
+    background: rgb(26, 26, 26) 0.9;
+    margin-bottom: 20px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+#msg-sep {
+    border: 1px solid rgb(0, 140, 255);
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.reply-form {
+    background: none;
+    width: 90%;
+    height: 100%;
+}
+
+#msg {
+    width: 60%;
+    height: 150px;
+    border: 1px solid #ccc;
+    resize: none;
+    display: flex;
+    justify-content:flex-end;
+    flex-direction: column;
+}
+  
+#msg::placeholder {
+    color: #999;
+    font-style: italic;
+}
+/*////////////////////////////////////////////////////////*/
+
+/* showuserposts.html */
+
+.description-stats {
+    margin-bottom: 10px;
+}
+
+/*////////////////////////////////////////////////////////*/
+/* edit.html */
+.edit-post-textarea {
+    resize: none;
+}
+/*////////////////////////////////////////////////////////*/
+
+
+
+
+/* Mobile */
+
+/*////////////////////////////////////////////////////////*/
+/* UNDER DEVELOPMENT MOBILE VERSION */
+/* DOES NOT WORK PROPERLY ATM */
+/* COMING WITH UPDATES IN NEW VERSIONS */
+
+@media (max-width: 1068px) {
+
+    .thread-form-container {
+        flex-direction: column;
+        display: flex;
+        flex: wrap;
+    }
+    
+    .count-posts {
+        flex-basis: 35%;
+        font-size: 10px;
+        display: flex;
+        flex: wrap;
+    }   
+    
+    .threads-title {
+        font-size: 15px;
+        font-weight: 700;
+        text-align:left;
+        display: flex;
+        flex: wrap;
+    }
+
+    .thr-description {
+        font-size: 10px;
+        margin-top: 65px;
+        display: flex;
+        flex: wrap;
+    }
+
+    .last-posts {
+        font-size: 10px;
+        display: flex;
+        flex: wrap;
+    }
+}

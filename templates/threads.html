@@ -1,0 +1,35 @@
+{{ define "show_threads" }}
+
+{{ template "header" . }}
+
+<script type="text/javascript"> 
+    newPageTitle = 'Forum | '+ '{{.MainThreadName}}';
+    document.title = newPageTitle;
+</script>
+
+{{ if .IsLoggedIn }}
+<form action="/thread/create" method="get">
+    <button class="website-button" type="submit">Start Topic</button>
+</form> 
+{{ else }}
+<p style="color: red">Please login</p>
+{{ end }}
+{{ range .Topics }}
+    <div class="show-all-threads">
+        <div class="thread-form-container">
+            <div class="thr-name">
+    <a id="threadname-sub" href="/thread/{{ .Id }}"><h1 class="threads-title">{{.Title}}</h1></a>
+</div>
+    <div class="count-posts">
+        <p><b>Total Posts: {{.NumReplies}}</b></p>
+    </div>
+    <div class="last-posts">
+        <p><b>Last post by:<a style="color: rgb(66, 206, 15);" href="/acc/profile/{{.LastPostAuthorId}}"> {{.LastPostAuthor}}</a> at {{.LastPostTime}}</b></p>
+    </div>
+</div>
+</div>
+{{ end }}
+
+{{ template "footer" }}
+
+{{ end }}

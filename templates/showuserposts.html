@@ -1,0 +1,24 @@
+{{ define "show-user-all-posts" }}
+
+{{ template "header" . }}
+
+<script type="text/javascript"> 
+        newPageTitle = 'Forum | ' + '{{ .UserNickname }} posts';
+        document.title = newPageTitle;
+</script>
+
+<h3 style="color:aquamarine">User stats</h3>
+<h3 style="color:aliceblue">{{ .UserNickname }}</h3>
+<div class="stats-list">
+{{ range .Messages }}
+<div class="description-stats">
+<hr>
+<p style="font-size:12px;"><span style="color: rgb(169, 169, 169)">Post #{{ .Id }} </span> in <span style="color: rgb(221, 134, 13);">{{ .ThreadTitle }}</span> <a href="/thread/{{ .ThreadId }}">Go to topic</a></p>
+</div>
+<p style="font-size:14px;">{{ .Body }}</p>
+{{ end }}
+</div>
+
+{{ template "footer" }}
+
+{{ end }}

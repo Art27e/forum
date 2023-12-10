@@ -1,0 +1,20 @@
+{{ define "profile" }}
+
+{{ template "header" . }}
+
+<!--Profile page is under development -->
+
+<script type="text/javascript"> 
+    newPageTitle = 'Forum | '+ '{{.Username}} Profile';
+    document.title = newPageTitle;
+</script>
+
+<section>
+<p>You are viewing profile page of {{ .Username }}</p>
+<p>Acc ID: {{ .UserId }}</p>
+<p>Total Posts:<a href="/acc/profile/{{ .UserId }}/all-posts" target="_blank">{{ .TotalPosts }}</a></p>
+</section>
+
+{{ template "footer"}}
+
+{{ end }}

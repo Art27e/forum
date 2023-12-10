@@ -1,0 +1,34 @@
+{{ define "index" }}
+
+{{ template "header" . }}
+
+{{ if .IsLoggedIn }}
+<div class="welcome-message">
+    <p class="welcome-msg"> Welcome, <img src="../img/avatar.png" alt="user avatar" class="avatar-mainpage"> {{ .Username }}! </p>
+</div>
+{{ end }}
+{{ range .Threads }}
+<div class="show-all-threads">
+    <div class="thread-form-container">
+        <div class="thr-name">
+            <a href="/forum/{{ .Id }}"><h1 class="threads-title">{{ .Title }}</h1></a>
+        </div>
+        <p class="thr-description">{{ .Description }}</p>
+        <div class="count-posts">
+            <p><b>Total Posts: {{ .PostsCount }}</b></p>
+            <p><b>Total Topics: {{ .TopicCount }}</b></p>
+        </div>
+        <div class="last-posts">
+            {{ if ne .LastPost -1 }}
+            <p><b>Last post by: <a style="color: rgb(66, 206, 15);" href="/acc/profile/{{.LastTopicUserId}}">{{ .LastTopicUser }}</a> in <a style="color:rgb(15, 15, 50);" href="/thread/{{.LastTopicId}}">{{ .LastTopicTitle }}</a> at {{ .LastPostTime }}</b></p>
+            {{ else }}
+            <p style="color:rgb(188, 0, 0); font-weight: 300;">No posts. Be first!</p>
+            {{ end }}
+        </div>
+    </div>
+</div>
+{{ end }}
+
+{{ template "footer" }}
+
+{{ end }}

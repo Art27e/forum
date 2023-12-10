@@ -1,0 +1,32 @@
+{{ define "header" }}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> Forum | Homepage </title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="/"><h1 class="logo">Forum in Go</h1></a>
+      <nav class="navigation-bar">
+        <a class="navigation-link" href="/">Home</a>
+         {{ if not .IsLoggedIn }}
+        <a class="navigation-link" href="/login">Login</a>
+        <a class="navigation-link" href="/register">Register</a> 
+        {{ else }} 
+        <a class="navigation-link" href="/myprofile/{{ .UserId }}">My profile</a>
+        <form action="/acc/logout" method="get">
+          <a class="navigation-link" href="/acc/logout">Logout</a> 
+      </form>
+        {{ end }} 
+      </nav>
+    </header>
+    {{ end }}

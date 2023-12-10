@@ -1,0 +1,30 @@
+{{ define "login" }}
+
+{{ template "header" . }}
+
+<script type="text/javascript"> 
+        newPageTitle = 'Forum | Login';
+        document.title = newPageTitle;
+</script>
+
+{{ if .FailureCheck }}
+<p class="warning-msg">{{ .WarningText }} </p>
+{{ end }}
+
+{{ if .IsLoggedIn }}
+<p class="warning-msg">{{ .WarningText }} </p>
+{{ else }}
+    <div class="login-form">
+        <form action="/acc/login" method="post">
+            <input type="text" name="username" id="username" placeholder="Username">
+            <br>
+            <input type="password" name="password" id="password" placeholder="Password">
+            <br>
+            <button class="website-button" type="submit">Log in</button>
+        </form>
+    </div>
+{{ end }}
+
+    {{ template "footer" }}
+
+    {{ end }}
