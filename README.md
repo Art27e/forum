@@ -1,6 +1,7 @@
 # forum
 
-### version 1.0 (dec 2023)
+### last update 1.2 (09.08.2024)
+###### see changes in Changelog.txt
 
 User can register, login, comment, create topics and like posts. Users cant remove posts or topics they created, but its possible to edit posts until a certain time.
 All data is stored in the database (sqlite3)
