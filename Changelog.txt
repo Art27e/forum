@@ -1,0 +1,11 @@
+-------------August 2024---------------
+----------------v1.2-------------------
+- NEW! Login fail messages are changed, now 1 message for all cases - "User not exist, wrong user or password"
+Found its best practice for websites to have login error messages that dont isolate what is wrong with the login attempt
+- NEW! Password requirements. Rewrote functions to check passwords. 
+[Min - 6 symbols, Max - 25 symbols. At least - 1 Upper-case symbol, 1 lower-case symbol, 1 punctuational symbol and 1 number]
+- NEW! sha256 password encryption was added
+- FIX! Cleared project files, removed unnecessary lines of code and files
+- FIX! Changed sqlite3 package dependencies, now you dont need to have GCC installed to run the code
+- FIX! Removed session logs in the terminal
+---------------------------------------
