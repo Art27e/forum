@@ -101,6 +101,7 @@ type EditMsg struct {
 
 type ErrorMessage struct {
 	WarningMessage bool
+	PassCheckMsg   bool
 	IsLoggedIn     bool
 	WarningText    string
 	FailureCheck   bool
@@ -141,6 +142,8 @@ var LoginCheck bool // just another login check boolean, probably will be remove
 var CheckLoginFail bool // for errors, warning messages related to login
 
 var WarningMsg bool // for errors, warning messages related to login
+
+var WarningMsg2 bool // for password check warnings
 
 var SaveVars string // to track post id, when we wanna edit it
 

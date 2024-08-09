@@ -6,15 +6,14 @@ import (
 	"forum/web"
 	"log"
 	"net/http"
-
 	"github.com/gorilla/mux"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 func init() {
 	var err error
 
-	models.Db, err = sql.Open("sqlite3", "db/forum.db")
+	models.Db, err = sql.Open("sqlite", "db/forum.db")
 	if err != nil {
 		log.Println("Error connecting to the database:", err)
 		return

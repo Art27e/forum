@@ -12,6 +12,8 @@ import (
 	"strings"
 	"text/template"
 	"time"
+	"unicode"
+	"crypto/sha256"
 )
 
 var MyLogin bool
@@ -165,17 +167,17 @@ func Index(w http.ResponseWriter, r *http.Request) { // homepage
 	}
 
 	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err = r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	if models.LoggedUser != "" {
@@ -203,17 +205,17 @@ func Index(w http.ResponseWriter, r *http.Request) { // homepage
 func CreateThreadPage(w http.ResponseWriter, r *http.Request) { // create topic html page handler
 
 	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err := r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	t, err := template.ParseFiles("templates/createthread.html", "templates/header.html", "templates/footer.html")
@@ -241,17 +243,17 @@ func CreateThreadPage(w http.ResponseWriter, r *http.Request) { // create topic 
 func CreateThread(w http.ResponseWriter, r *http.Request) { // post action
 
 	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err := r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	followedThreadId := models.FollowMainThreadId
@@ -324,17 +326,17 @@ func CreateThread(w http.ResponseWriter, r *http.Request) { // post action
 func ShowThread(w http.ResponseWriter, r *http.Request) { // show topic with all posts
 
 	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err := r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	t, err := template.ParseFiles("templates/thread.html", "templates/header.html", "templates/footer.html")
@@ -477,20 +479,19 @@ func ShowThread(w http.ResponseWriter, r *http.Request) { // show topic with all
 	}
 }
 
-func ShowUserAllPosts (w http.ResponseWriter, r *http.Request) {
+func ShowUserAllPosts(w http.ResponseWriter, r *http.Request) {
 
-	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err := r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	t, err := template.ParseFiles("templates/thread.html", "templates/header.html", "templates/footer.html", "templates/showuserposts.html")
@@ -553,14 +554,10 @@ func ShowUserAllPosts (w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-		statsData.Messages = postCollection
-		statsData.UserId = models.UserId
-		statsData.UserNickname = userName
-		statsData.IsLoggedIn = models.IsLoggedIn
-
-
-
-
+	statsData.Messages = postCollection
+	statsData.UserId = models.UserId
+	statsData.UserNickname = userName
+	statsData.IsLoggedIn = models.IsLoggedIn
 
 	err = t.ExecuteTemplate(w, "show-user-all-posts", statsData)
 	if err != nil {
@@ -570,20 +567,20 @@ func ShowUserAllPosts (w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func LikeIt (w http.ResponseWriter, r *http.Request) { // Like mechanism
+func LikeIt(w http.ResponseWriter, r *http.Request) { // Like mechanism
 
 	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err := r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	// After like complete, redirect us to the topic with our post
@@ -637,17 +634,17 @@ func LikeIt (w http.ResponseWriter, r *http.Request) { // Like mechanism
 func RemoveLike(w http.ResponseWriter, r *http.Request) { // Remove like
 
 	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err := r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	// After like complete, redirect us to the topic with our post
@@ -690,17 +687,17 @@ func RemoveLike(w http.ResponseWriter, r *http.Request) { // Remove like
 func ShowMainThread(w http.ResponseWriter, r *http.Request) { // Show list of topics
 
 	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err := r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	t, err := template.ParseFiles("templates/threads.html", "templates/header.html", "templates/footer.html")
@@ -873,23 +870,23 @@ func Register(w http.ResponseWriter, r *http.Request) { // handler. html page fo
 		return
 	}
 
-	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err = r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	// our data includes login status check and booleans to activate registration failure error messages
 	data := models.ErrorMessage{
 		WarningMessage: models.WarningMsg,
+		PassCheckMsg:   models.WarningMsg2,
 		IsLoggedIn:     models.IsLoggedIn,
 		UserExists:     models.IfUserExists,
 	}
@@ -897,6 +894,7 @@ func Register(w http.ResponseWriter, r *http.Request) { // handler. html page fo
 	// reset all errors and warning messages after page refresh
 	models.IfUserExists = false
 	models.WarningMsg = false
+	models.WarningMsg2 = false
 
 	err = t.ExecuteTemplate(w, "registration", data)
 	if err != nil {
@@ -917,18 +915,17 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) { // post action for r
 	}
 	statement.Exec()
 
-	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err = r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	// We check if nickname is already taken
@@ -966,8 +963,50 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) { // post action for r
 		}
 	}
 
-	userName := r.FormValue("username")
+	// Password reqs check
+	fmt.Println(r.FormValue("password"))
+
 	passWord := r.FormValue("password")
+
+	checkUpper := false
+	checkLower := false
+	checkNum := false
+	checkSymb := false
+	checkWrongSymb := true
+
+	for _, letter := range r.FormValue("password") {
+		switch {
+		case unicode.IsUpper(letter):
+			checkUpper = true
+		case unicode.IsLower(letter):
+			checkLower = true
+		case unicode.IsDigit(letter):
+			checkNum = true
+		case unicode.IsPunct(letter):
+			checkSymb = true
+		case unicode.IsSymbol(letter):
+			checkWrongSymb = false
+		}
+	}
+
+	finalCheck := checkLower && checkUpper && checkNum && checkSymb && checkWrongSymb
+	fmt.Println(checkLower, checkUpper, checkNum, checkSymb, checkWrongSymb)
+	fmt.Println(finalCheck)
+	if !finalCheck {
+		models.WarningMsg2 = true // if reqs not met, redirect and try again
+		http.Redirect(w, r, "/register", http.StatusSeeOther)
+		return
+	}
+
+	// Encryption
+	h := sha256.Sum256([]byte(passWord))
+	salty := "ora4vng3"
+	salt := sha256.Sum256([]byte(salty))
+	newPass := fmt.Sprintf("%x", h) + fmt.Sprintf("%x", salt)
+	fmt.Println(newPass)
+
+	userName := r.FormValue("username")
+	//passWord := r.FormValue("password")
 	eMail := r.FormValue("email")
 
 	// We insert our nickname, pass and email from inputs to sql table named users
@@ -977,7 +1016,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) { // post action for r
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	insert.Exec(userName, passWord, eMail)
+	insert.Exec(userName, newPass, eMail)
 	defer insert.Close()
 
 	// User data check, if registration went wrong somehow, it should return 500 error code webpage
@@ -989,7 +1028,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) { // post action for r
 	}
 
 	for row.Next() {
-		row.Scan(&userName, passWord, eMail)
+		row.Scan(&userName, newPass, eMail)
 	}
 
 	// After registration form, we are redirected to the main page
@@ -1006,17 +1045,17 @@ func Login(w http.ResponseWriter, r *http.Request) { // handler for html page lo
 	}
 
 	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err = r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	// our data includes text messages for errors/warnings, boolean for login failures and login status checks
@@ -1045,17 +1084,17 @@ func AccLogin(w http.ResponseWriter, r *http.Request) { // post action for login
 	passWord := r.FormValue("password")
 
 	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err := r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	// Getting ID from the username for our further operations, if not found then write messages on the website and try again
@@ -1064,7 +1103,7 @@ func AccLogin(w http.ResponseWriter, r *http.Request) { // post action for login
 	if err != nil {
 		defer http.Redirect(w, r, "/login", http.StatusSeeOther)
 		models.CheckLoginFail = true
-		models.WarningMsgText = "User not exist"
+		models.WarningMsgText = "User not exist, wrong user or password"
 		return
 	}
 
@@ -1073,7 +1112,7 @@ func AccLogin(w http.ResponseWriter, r *http.Request) { // post action for login
 	if err != nil {
 		defer http.Redirect(w, r, "/login", http.StatusSeeOther)
 		models.CheckLoginFail = true
-		models.WarningMsgText = "User not exist"
+		models.WarningMsgText = "User not exist, wrong user or password"
 		return
 	}
 
@@ -1084,13 +1123,19 @@ func AccLogin(w http.ResponseWriter, r *http.Request) { // post action for login
 		if err == sql.ErrNoRows { // было err
 			defer http.Redirect(w, r, "/login", http.StatusSeeOther)
 			models.CheckLoginFail = true
-			models.WarningMsgText = "Incorrect password"
+			models.WarningMsgText = "User not exist, wrong user or password"
 			return
 		}
 	}
 
+	h2 := sha256.Sum256([]byte(passWord))
+	salty2 := "ora4vng3"
+	salt2 := sha256.Sum256([]byte(salty2))
+	newPass2 := fmt.Sprintf("%x", h2) + fmt.Sprintf("%x", salt2)
+	fmt.Println(newPass2)
+
 	// Logics, in case of successful login
-	if passInDb == passWord {
+	if passInDb == newPass2 {
 		MyLogin = true
 		fmt.Println(MyLogin, "successful") // as it's true, now website functions for logged users are activated
 		models.LoggedUser = userName       // track logged in nickname
@@ -1101,7 +1146,7 @@ func AccLogin(w http.ResponseWriter, r *http.Request) { // post action for login
 		http.Redirect(w, r, "/secure", http.StatusSeeOther)
 	} else {
 		models.CheckLoginFail = true
-		models.WarningMsgText = "Incorrect password"
+		models.WarningMsgText = "User not exist, wrong user or password"
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 	}
 }
@@ -1143,17 +1188,17 @@ func ShowProfile(w http.ResponseWriter, r *http.Request) {
 	// Profile pages are under development. Codes in showProfile and showMyProfile may be similar to each other.
 
 	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err := r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	t, err := template.ParseFiles("templates/profile.html", "templates/header.html", "templates/footer.html")
@@ -1202,7 +1247,7 @@ func ShowProfile(w http.ResponseWriter, r *http.Request) {
 		ProfileShow: models.LoginCheck,
 		Username:    user,
 		UserId:      uint16(toInt),
-		TotalPosts: uint16(count),
+		TotalPosts:  uint16(count),
 	}
 
 	vars["id"] = strconv.Itoa(int(ourData.UserId))
@@ -1226,17 +1271,17 @@ func ShowMyProfile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err = r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	vars := mux.Vars(r)
@@ -1286,17 +1331,17 @@ func ModifyPost(w http.ResponseWriter, r *http.Request) {
 	// Here is a page for editing our post, if all conditions have been respected
 
 	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err := r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	t, err := template.ParseFiles("templates/edit.html", "templates/header.html", "templates/footer.html")
@@ -1347,17 +1392,17 @@ func ModifyPostButton(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err := r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	// Modified post changes
@@ -1393,17 +1438,17 @@ func ModifyPostButton(w http.ResponseWriter, r *http.Request) {
 func AddPost(w http.ResponseWriter, r *http.Request) {
 
 	// Check if session exists
-	sessionID := ""
-	SessionUser, err := r.Cookie("session" + models.LoggedUser)
+	//sessionID := ""
+	_, err := r.Cookie("session" + models.LoggedUser)
 	if err != nil {
 		models.IsLoggedIn = false
 		models.LoginCheck = false
-		log.Println("No cookie sessions found")
+		//log.Println("No cookie sessions found")
 	} else {
 		models.IsLoggedIn = true
 		models.LoginCheck = true
-		sessionID = SessionUser.Value
-		log.Println("Session", sessionID, "exists")
+		//sessionID = SessionUser.Value
+		//log.Println("Session", sessionID, "exists")
 	}
 
 	// In case if we want to add post being logged out - redirect to the main page
