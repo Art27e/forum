@@ -10,7 +10,6 @@ Found its best practice for websites to have login error messages that dont isol
 - FIX! Removed session logs in the terminal
 ---------------------------------------
 ----------------v1.3-------------------
-- NEW! Hypertext Transfer Protocol Secure (HTTPS) protocol implemented
 - NEW! Favicon updated
 - FIX! Fixed "Failed to load resource: the server responded with a status of 404 (Not Found) :8080/favicon.ico:1 "
 ---------------------------------------
