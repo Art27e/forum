@@ -604,7 +604,7 @@ func LikeIt(w http.ResponseWriter, r *http.Request) { // Like mechanism
 	err = models.Db.QueryRow("SELECT id FROM users WHERE username = ?", models.LoggedUser).Scan(&models.Creator)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			http.Error(w, "Invalid username", http.StatusUnauthorized)
+			//http.Error(w, "Invalid username", http.StatusUnauthorized)
 			return
 		}
 	}
@@ -668,7 +668,7 @@ func RemoveLike(w http.ResponseWriter, r *http.Request) { // Remove like
 	err = models.Db.QueryRow("SELECT id FROM users WHERE username = ?", models.LoggedUser).Scan(&models.Creator)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			http.Error(w, "Invalid username", http.StatusUnauthorized)
+			//http.Error(w, "Invalid username", http.StatusUnauthorized)
 			return
 		}
 	}

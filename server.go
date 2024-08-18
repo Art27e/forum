@@ -21,6 +21,9 @@ func init() {
 }
 
 func main() {
+	certFilePath := "localhost+1.pem"
+	keyFilePath := "localhost+1-key.pem"
+
 	rtr := mux.NewRouter()
 
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./css/"))))
@@ -48,9 +51,9 @@ func main() {
 	rtr.HandleFunc("/removelike/{id:[0-9]+}", web.RemoveLike).Methods("post")
 
 	log.Println("Server is online")
-	log.Println("Visit http://localhost:8080/")
+	log.Println("Visit https://localhost:8080/")
 	log.Println("Press CTRL+C to shutdown the server")
 
 	http.Handle("/", rtr)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServeTLS(":8080",certFilePath,keyFilePath, nil)
 }
