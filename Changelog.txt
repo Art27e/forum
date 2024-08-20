@@ -15,4 +15,9 @@ Found its best practice for websites to have login error messages that dont isol
 ---------------------------------------
 ----------------v1.4-------------------
 - NEW! Upgraded HTTP to HTTPS: All communications are now securely handled over HTTPS. This change improves security by encrypting data in transit and ensuring secure connections.
+- NEW! Cookies are only sent over HTTPS connections
+- NEW! Session token generation changed. UUIDs typically provide 122 bits of randomness, which is generally secure, 
+but not as strong as cryptographically secure random strings, which can have much higher entropy (e.g., 256 bits or more)
+- NEW! More secured cookies. Prevents JavaScript from accessing the cookie
+- FIX! Removed unnecessary session cookies checks. Now only main page checks for login session cookies.
 - FIX! style.css changes

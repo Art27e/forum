@@ -77,10 +77,10 @@ type PostMsg struct {
 }
 
 type Stats struct {
-	IsLoggedIn bool
-	UserId uint16
+	IsLoggedIn   bool
+	UserId       uint16
 	UserNickname string
-	Messages   []PostMsg
+	Messages     []PostMsg
 }
 
 type PostForStats struct {
@@ -126,33 +126,19 @@ func (mainThreadf *Thread) NumReplies() (count int) {
 	return
 }
 
-var Db *sql.DB // database we use
-
-var IsLoggedIn bool // shows, if we are logged in or logged out
-
-var UserId uint16  // logged user ID, in new updates going to unite with Creator variable
-var Creator uint16 // logged user ID, in new updates going to unite with UserId variable
-
-var LoggedUser string // nickname of logged in user
-
-var SessionToken string // our session token
-
-var LoginCheck bool // just another login check boolean, probably will be removed in new versions
-
-var CheckLoginFail bool // for errors, warning messages related to login
-
-var WarningMsg bool // for errors, warning messages related to login
-
-var WarningMsg2 bool // for password check warnings
-
-var SaveVars string // to track post id, when we wanna edit it
-
-var WarningMsgText string // contains some text for error, probably will be replaced only with html template errors later
-
+var Db *sql.DB                // database we use
+var IsLoggedIn bool           // shows, if we are logged in or logged out
+var UserId uint16             // logged user ID, in new updates going to unite with Creator variable
+var Creator uint16            // logged user ID, in new updates going to unite with UserId variable
+var LoggedUser string         // nickname of logged in user
+var SessionToken string       // our session token
+var LoginCheck bool           // just another login check boolean, probably will be removed in new versions
+var CheckLoginFail bool       // for errors, warning messages related to login
+var WarningMsg bool           // for errors, warning messages related to login
+var WarningMsg2 bool          // for password check warnings
+var SaveVars string           // to track post id, when we wanna edit it
+var WarningMsgText string     // contains some text for error, probably will be replaced only with html template errors later
 var FollowMainThreadId uint16 // to track main thread location, in new updates logics probably will be modified
-
-var FollowThreadId uint16 // to track topic location, in new updates logics probably will be modified
-
-var FollowPostId uint16 // to track post id for likes
-
-var IfUserExists bool // for registration, if user already exists
+var FollowThreadId uint16     // to track topic location, in new updates logics probably will be modified
+var FollowPostId uint16       // to track post id for likes
+var IfUserExists bool         // for registration, if user already exists

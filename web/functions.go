@@ -1,10 +1,12 @@
 package web
 
 import (
-	"time"
 	"fmt"
-	"log"
 	"forum/models"
+	"log"
+	"time"
+	"crypto/rand"
+	"encoding/base64"
 )
 
 func GetCurrentTime() (time.Time, error) {
@@ -26,4 +28,13 @@ func ClearData(tableName string) {
 		log.Println("Error occured during clearing sql data", err)
 		return
 	}
+}
+
+func GenerateSessionToken() (string, error) {
+    token := make([]byte, 32) // 32 bytes = 256 bits
+    _, err := rand.Read(token)
+    if err != nil {
+        return "", err
+    }
+    return base64.URLEncoding.EncodeToString(token), nil
 }

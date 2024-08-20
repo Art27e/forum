@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"forum/models"
 	"forum/web"
-	"log"
-	"net/http"
 	"github.com/gorilla/mux"
+	"log"
 	_ "modernc.org/sqlite"
+	"net/http"
 )
 
 func init() {
@@ -55,5 +55,5 @@ func main() {
 	log.Println("Press CTRL+C to shutdown the server")
 
 	http.Handle("/", rtr)
-	http.ListenAndServeTLS(":8080",certFilePath,keyFilePath, nil)
+	http.ListenAndServeTLS(":8080", certFilePath, keyFilePath, nil)
 }
