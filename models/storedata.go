@@ -16,18 +16,27 @@ type Data struct {
 	IsLoggedIn  bool
 	ProfileShow bool
 	Username    string
-	UserId      uint16
+	UserId    uint16
+	OthersId      uint16
+	Group       string
+	PermRights  int
+	Admin       bool
 	Threads     []Thread
 	TotalPosts  uint16
+	WarningMsg  bool
+	WarningText string
+	Users      []User
 }
 
 type ForumData struct {
 	IsLoggedIn     bool
+	Admin          bool
 	UserId         uint16
 	Messages       []PostMsg
 	Topics         []SubThread
 	MainThreadName string
 	MainThreadId   uint16
+	UserData       Data // нужно будет все исправить, первые два должны будут быть удалены и включены в структуру и все поменять в обработчиках
 }
 
 type Thread struct {
@@ -41,6 +50,9 @@ type Thread struct {
 	LastTopicUser      string
 	LastTopicUserId    uint16
 	LastTopicId        uint16
+	Admin              bool
+	IsLoggedIn             bool
+	UserId             uint16
 }
 
 type MainThread []struct {
@@ -71,6 +83,7 @@ type PostMsg struct {
 	ThreadTitle  string
 	CreatedAt    time.Time
 	LastPostTime time.Time
+	Admin        bool
 	CheckHost    bool
 	MainThreadId uint16
 	Likes        uint16
@@ -78,6 +91,7 @@ type PostMsg struct {
 
 type Stats struct {
 	IsLoggedIn   bool
+	Admin        bool
 	UserId       uint16
 	UserNickname string
 	Messages     []PostMsg
@@ -96,6 +110,7 @@ type EditMsg struct {
 	Id         uint16
 	Body       string
 	UserId     uint16
+	Admin      bool
 	Errors     ErrorMessage
 }
 
@@ -129,6 +144,8 @@ func (mainThreadf *Thread) NumReplies() (count int) {
 var Db *sql.DB                // database we use
 var IsLoggedIn bool           // shows, if we are logged in or logged out
 var UserId uint16             // logged user ID, in new updates going to unite with Creator variable
+var UserGroup string          // logged user group relation
+var CheckAdminRights bool     // if user has admin rights
 var Creator uint16            // logged user ID, in new updates going to unite with UserId variable
 var LoggedUser string         // nickname of logged in user
 var SessionToken string       // our session token
@@ -142,3 +159,4 @@ var FollowMainThreadId uint16 // to track main thread location, in new updates l
 var FollowThreadId uint16     // to track topic location, in new updates logics probably will be modified
 var FollowPostId uint16       // to track post id for likes
 var IfUserExists bool         // for registration, if user already exists
+var WarningTxt string         // for password modify success text

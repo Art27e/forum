@@ -12,9 +12,9 @@
 <section id="create-thread">
 <form action="/create-thread" method="post">
     <p class="text-make-thread">Topic name (min chars: 6):</p>
-    <textarea name="topic" id="topic" minlength="6" maxlength="20" required placeholder="Write topic name here.."></textarea>
+    <textarea name="topic" id="topic" minlength="6" maxlength="60" required placeholder="Write topic name here.."></textarea>
     <p class="text-make-thread">Message (min chars: 4):</p>
-    <textarea rows="4" name="msg-create" id="msg-create" minlength="4" maxlength="350" required placeholder="Write text here..."></textarea>
+    <textarea rows="4" name="msg-create" id="msg-create" minlength="4" maxlength="2000" required placeholder="Write text here..."></textarea>
     <br>
     <button class="website-button" type="submit">Make a topic</button>
 </form>

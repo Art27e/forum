@@ -18,9 +18,14 @@
         <form action="/acc/login" method="post">
             <input type="text" name="username" id="username" placeholder="Username">
             <br>
+            <style>
+                input::placeholder {
+                    color: #888888 !important;
+                }
+                </style>
             <input type="password" name="password" id="password" placeholder="Password">
             <br>
-            <button class="website-button" type="submit">Log in</button>
+            <button class="website-button" type="submit">Sign In</button>
         </form>
     </div>
 {{ end }}

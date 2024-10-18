@@ -1,0 +1,29 @@
+{{ define "modify_mainthread" }}
+
+{{ template "header" . }}
+
+<script type="text/javascript"> 
+    newPageTitle = 'Forum | Modify Main Thread';
+    document.title = newPageTitle;
+</script>
+
+{{ if .IsLoggedIn }}
+<section id="create-thread">
+<form action="/mod-thread" method="post">
+    <p class="text-make-thread">Main thread name (min chars: 6):</p>
+    <textarea name="title" id="topic" minlength="6" maxlength="40">{{ .Title }}</textarea>
+    <p class="text-make-thread">Description (min chars: 8):</p>
+    <textarea name="description" id="topic" minlength="8" maxlength="40">{{ .Description }}</textarea>
+    <br>
+    <button class="website-button" type="submit">Submit</button>
+</form>
+</section>
+{{ else }}
+<p style="color:red">You are not logged in / no admin rights</p>
+<form action="/login" method="get">
+    <button class="website-button" type="submit">Login</button>
+</form>
+{{ end }}
+{{ template "footer" }}
+
+{{ end }}

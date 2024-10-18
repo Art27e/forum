@@ -24,11 +24,16 @@
     <form action="/register_user" method="post">
         <input type="text" name="username" id="username" minlength="6" maxlength="25" required placeholder="Username">
         <br>
+        <style>
+            input::placeholder {
+                color: #888888 !important;
+            }
+            </style>
         <input type="password" name="password" id="password" minlength="6" maxlength="25" required placeholder="Password">
         <br>
         <input type="email" name="email" id="email" minlength="8" maxlength="30" required placeholder="Email">
         <br>
-        <button class="website-button" type="submit">Submit</button>
+        <button class="website-button" type="submit">Create My Account</button>
     </form>
 </div>
 {{ else }}

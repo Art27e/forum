@@ -1,0 +1,36 @@
+{{ define "admin_panel" }}
+
+{{ template "header" . }}
+
+<script type="text/javascript"> 
+    newPageTitle = 'Forum | Admin Control Panel';
+    document.title = newPageTitle;
+</script>
+
+<body>
+    <div class="parent-container">
+    <div class="funcs-description">
+        <p>Search for user</p>
+        <p>Ban/unban users</p>
+        <p>Promote/demote users</p>
+        <p>Edit user profiles</p>
+        <p>Delete and edit posts, topics, forums</p>
+    </div>
+    <div class="search-container">
+        <form action="/admin/search" class="search">
+            <input type="text" name="query" list="users" placeholder="Search for user" autocomplete="off" required>
+            <button type="submit" class="search-button"><img class="search-pic" src="https://i.ibb.co/VJ4hjfc/search.png" alt="searchpng"/></button>
+            <datalist id="users">
+                {{ range .Users }}
+                <option value="{{ .Username }}" data-id="{{ .Id }}">{{ .Username }}</option>
+            {{ end }}
+            </datalist>
+        </form>
+    </div>
+    </div>
+</body>
+
+
+{{ template "footer" }}
+
+{{ end }}

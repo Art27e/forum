@@ -9,7 +9,7 @@
 </script>
 {{ end }}
 
-<button class="website-button" onclick="location.href='/forum/{{.MainThreadId}}'">Go Back</button>
+<button class="website-button-inside" onclick="location.href='/forum/{{.MainThreadId}}'">Go back</button>
 
 {{ with index .Messages 0}}
 <h2 class="thread-title">{{ .ThreadTitle }}</h2>
@@ -18,10 +18,15 @@
 <div class="messages">
     <hr id="msg-sep">
     {{ range .Messages }}
-    <div style="margin-top: 0; padding-top: 0; display: flex; justify-content: space-between; align-items: center; font-size: 20px; color: rgb(66, 206, 15);">
-        <p><a style="margin-top:0; padding-top: 0; text-decoration: none; color: rgb(66, 206, 15);" href="/acc/profile/{{.AuthorID}}">{{ .Author}}</a></p>
+    <div class="reply-field">
+        <p><a style="color: rgb(66, 206, 15);" href="/acc/profile/{{.AuthorID}}">{{ .Author}}</a></p>
         {{ if .CheckHost }}
+        {{ if .Admin }}
+        <p style="font-size: 12px;"><a style="color: red;" href="/post/{{.Id}}/edit">Edit Post</p></a>
+        <form action="/post/{{.Id}}/delete" method="post"><input type="hidden" name="post-id" value="{{.Id}}"><p onclick="this.parentNode.submit();" style="cursor: pointer; font-size: 12px; color: red;">Delete post</p></form>
+        {{ else }}
         <p style="font-size: 12px;"><a style="color: aliceblue;" href="/post/{{.Id}}/edit">Edit Post</p></a>
+        {{ end }}
         {{ end }}
         <div class="like-posts">
             <form action="/like/{{.Id}}" method="post" autocomplete="off">
@@ -34,7 +39,7 @@
         </div>
         <p style="margin-top: 0; padding-top: 0; font-size: 12px; color:rgb(185, 185, 185);">{{.LastPostTime}}</p>
     </div>
-     <p style="padding-left: 40px; width: 100%; font-size: 16px; text-align: left; overflow-wrap: break-word;">{{ .Body }} </p>
+     <p style="padding-top: 0; padding-bottom: 10px; padding-left: 40px; width: 100%; font-size: 16px; text-align: left; overflow-wrap: break-word;">{{ .Body }} </p>
      <hr id="msg-sep">
     {{ end }}
 </div>
@@ -42,7 +47,7 @@
 <form action="/post" method="post" autocomplete="off">
     <div class="reply-form">
     <textarea rows="4" name="msg" id="msg" minlength="4" maxlength="1300" required placeholder="Write text here..."></textarea>
-    <button class="website-button" type="submit">Add Post</button>
+    <button class="website-button-inside" type="submit">Add Post</button>
 </div>
 </form>
 {{ else }}

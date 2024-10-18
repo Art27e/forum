@@ -9,7 +9,7 @@
 
 {{ if .IsLoggedIn }}
 <form action="/thread/create" method="get">
-    <button class="website-button" type="submit">Start Topic</button>
+    <button class="website-button-inside" type="submit">Start new topic</button>
 </form> 
 {{ else }}
 <p style="color: red">Please login</p>
@@ -20,6 +20,12 @@
             <div class="thr-name">
     <a id="threadname-sub" href="/thread/{{ .Id }}"><h1 class="threads-title">{{.Title}}</h1></a>
 </div>
+{{ if $.Admin }}
+<div class="admin">
+    <a href="/thread/{{ .Id }}/edit"><p style="color:red; font-size: 13px;">Edit topic</p></a>
+    <form action="/thread/{{ .Id }}/del" method="post"><input type="hidden" name="thread-id" value="{{.Id}}"><p onclick="this.parentNode.submit();" style="cursor: pointer; font-size: 13px; color: red;">Delete</p></form>
+</div>
+{{ end }}
     <div class="count-posts">
         <p><b>Total Posts: {{.NumReplies}}</b></p>
     </div>

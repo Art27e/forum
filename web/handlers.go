@@ -28,6 +28,8 @@ func Index(w http.ResponseWriter, r *http.Request) { // homepage
 
 	// Reset any warning message
 	models.WarningMsg = false
+	models.WarningMsg2 = false
+	models.WarningTxt = ""
 
 	// Here we create table for our main forum threads, we manually write them later. With moderation functions, it will be added in the website
 	statement, err := models.Db.Prepare("CREATE TABLE IF NOT EXISTS main_threads (id INTEGER PRIMARY KEY, title TEXT, description TEXT)")
@@ -38,6 +40,8 @@ func Index(w http.ResponseWriter, r *http.Request) { // homepage
 	}
 	statement.Exec()
 
+	fmt.Println("GROUP USER:", models.UserId, models.LoggedUser, models.UserGroup)
+
 	// Here we create table for likes at our website
 	likeStatement, err := models.Db.Prepare("CREATE TABLE IF NOT EXISTS likes (id INTEGER PRIMARY KEY, user_id INTEGER REFERENCES users(id), post_id INTEGER REFERENCES posts(id))")
 	if err != nil {
@@ -47,7 +51,7 @@ func Index(w http.ResponseWriter, r *http.Request) { // homepage
 	}
 	likeStatement.Exec()
 
-	// As we dont have admin functions atm, we gonna write our threads manually here
+	// First main threads are here, being on version 2.0 you can create them in the web logged as admin group user
 	mainThread := models.MainThread{
 		{
 			Title:       "Forum Development",
@@ -66,6 +70,12 @@ func Index(w http.ResponseWriter, r *http.Request) { // homepage
 			Description: "Discuss sports here",
 		},
 	}
+
+	/*// Make groups for users
+	_, err = models.Db.Exec("ALTER TABLE users ADD COLUMN `groups` TEXT DEFAULT `users`")
+	if err != nil {
+		log.Fatalf("Error altering table: %v", err)
+	}*/
 
 	// count here to check, if data already exists there. If no, then we insert values
 	count := 0
@@ -119,7 +129,7 @@ func Index(w http.ResponseWriter, r *http.Request) { // homepage
 		lastpoststopicId := 0
 		err = models.Db.QueryRow("SELECT thread_id FROM posts WHERE mainthread_id = $1 ORDER BY created_at DESC LIMIT 1", mainThreadf.Id).Scan(&lastpoststopicId)
 		if err != nil {
-			lastpoststopicId = -1 // if none posts, then we set variable to -1
+			lastpoststopicId = -1 // if no posts, then we set variable to -1
 		}
 		mainThreadf.LastPost = lastpoststopicId
 
@@ -184,10 +194,24 @@ func Index(w http.ResponseWriter, r *http.Request) { // homepage
 		IsLoggedIn:  models.IsLoggedIn,
 		ProfileShow: models.LoginCheck,
 		Username:    models.LoggedUser,
+		Group:       models.UserGroup,
+		Admin:       models.CheckAdminRights,
 		UserId:      models.UserId,
 		Threads:     mThreads,
 	}
 
+	fmt.Println(models.UserGroup)
+
+	/* НА БУДУЩЕЕ. ИЗМЕНЕНИЕ ГРУППЫ ПОЛЬЗОВАТЕЛЯ
+	nicknames := "'admin1', 'forum_admin', 'Admin456', 'admin123'"
+	
+	query := fmt.Sprintf(`UPDATE 'users' SET 'group' = 'admins' WHERE username IN (%s);`, nicknames)
+
+    _, err = models.Db.Exec(query)
+    if err != nil {
+        panic(err)
+    }*/
+	
 	err = t.ExecuteTemplate(w, "index", ourData)
 	if err != nil {
 		log.Println("Error executing template:", err)
@@ -310,6 +334,11 @@ func ShowThread(w http.ResponseWriter, r *http.Request) { // show topic with all
 	postCollection := []models.PostMsg{} // data stores posts
 
 	dataTransfer.IsLoggedIn = models.IsLoggedIn
+	dataTransfer.UserData.Group = models.UserGroup
+	dataTransfer.Admin = models.CheckAdminRights
+
+	fmt.Println(dataTransfer.Admin)
+
 
 	// if login is active, then UserId = is me
 	if dataTransfer.IsLoggedIn {
@@ -337,6 +366,8 @@ func ShowThread(w http.ResponseWriter, r *http.Request) { // show topic with all
 		var mainthreadID int
 		var timeTime time.Time
 
+		messageFromUser.Admin = models.CheckAdminRights
+
 		err = rows.Scan(&messageFromUser.Id, &messageFromUser.Body, &authorID, &threadID, &mainthreadID, &timeTime)
 		if err != nil {
 			log.Println("error 0", err)
@@ -355,7 +386,7 @@ func ShowThread(w http.ResponseWriter, r *http.Request) { // show topic with all
 
 		// Get post's author
 		var authorUsername string
-		err = models.Db.QueryRow("SELECT username FROM users WHERE id = ?", authorID).Scan(&authorUsername)
+		err = models.Db.QueryRow("SELECT nickname FROM users WHERE id = ?", authorID).Scan(&authorUsername)
 		if err != nil {
 			log.Println("Error querying database:", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -410,7 +441,12 @@ func ShowThread(w http.ResponseWriter, r *http.Request) { // show topic with all
 		if models.LoginCheck && messageFromUser.AuthorID == models.UserId && time.Since(messageFromUser.CreatedAt) <= 5*time.Minute {
 			checkPostHost = true
 		}
+		
 		messageFromUser.CheckHost = checkPostHost
+
+		if dataTransfer.Admin {
+			messageFromUser.CheckHost = true
+		}
 
 		mainThreadIdeshka = mainthreadID
 		// Posts are stored in slice of data structures
@@ -418,6 +454,7 @@ func ShowThread(w http.ResponseWriter, r *http.Request) { // show topic with all
 	}
 	dataTransfer.MainThreadId = uint16(mainThreadIdeshka)
 	dataTransfer.Messages = append(dataTransfer.Messages, postCollection...)
+
 
 	err = t.ExecuteTemplate(w, "thread", dataTransfer)
 	if err != nil {
@@ -481,7 +518,7 @@ func ShowUserAllPosts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var userName string
-	err = models.Db.QueryRow("SELECT username FROM users WHERE id = ?", vars["id"]).Scan(&userName)
+	err = models.Db.QueryRow("SELECT nickname FROM users WHERE id = ?", vars["id"]).Scan(&userName)
 	if err != nil {
 		log.Println("Error querying database:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -492,6 +529,7 @@ func ShowUserAllPosts(w http.ResponseWriter, r *http.Request) {
 	statsData.UserId = models.UserId
 	statsData.UserNickname = userName
 	statsData.IsLoggedIn = models.IsLoggedIn
+	statsData.Admin = models.CheckAdminRights
 
 	err = t.ExecuteTemplate(w, "show-user-all-posts", statsData)
 	if err != nil {
@@ -611,6 +649,7 @@ func ShowMainThread(w http.ResponseWriter, r *http.Request) { // Show list of to
 	// The main data
 	dataTransfer := models.ForumData{}
 	dataTransfer.IsLoggedIn = models.IsLoggedIn
+	dataTransfer.Admin = models.CheckAdminRights
 
 	if dataTransfer.IsLoggedIn {
 		dataTransfer.UserId = models.UserId
@@ -670,7 +709,7 @@ func ShowMainThread(w http.ResponseWriter, r *http.Request) { // Show list of to
 
 		// Get username knowing id
 		authorUsername := ""
-		err = models.Db.QueryRow("SELECT username FROM users WHERE id = ?", authorID).Scan(&authorUsername)
+		err = models.Db.QueryRow("SELECT nickname FROM users WHERE id = ?", authorID).Scan(&authorUsername)
 		if err != nil {
 			log.Println("Error querying database:", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -711,7 +750,7 @@ func ShowMainThread(w http.ResponseWriter, r *http.Request) { // Show list of to
 
 		// last post author nickname
 		lastpostsUser := ""
-		err = models.Db.QueryRow("SELECT username FROM users WHERE id = ?", lastpostauthorideshka).Scan(&lastpostsUser)
+		err = models.Db.QueryRow("SELECT nickname FROM users WHERE id = ?", lastpostauthorideshka).Scan(&lastpostsUser)
 		if err != nil {
 			log.Println("Error querying database:", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -742,6 +781,7 @@ func ShowMainThread(w http.ResponseWriter, r *http.Request) { // Show list of to
 
 	// Here we save all our created topics
 	dataTransfer.Topics = append(dataTransfer.Topics, sThreads...)
+	dataTransfer.Admin = models.CheckAdminRights
 
 	err = t.ExecuteTemplate(w, "show_threads", dataTransfer)
 	if err != nil {
@@ -783,7 +823,7 @@ func Register(w http.ResponseWriter, r *http.Request) { // handler. html page fo
 func RegisterUser(w http.ResponseWriter, r *http.Request) { // post action for register
 
 	// If we dont have any table to store our users, we create it
-	statement, err := models.Db.Prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, email TEXT)")
+	statement, err := models.Db.Prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, nickname TEXT, password TEXT, email TEXT)")
 	if err != nil {
 		log.Println("Error preparing statement:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -850,6 +890,8 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) { // post action for r
 		}
 	}
 
+	fmt.Println(passWord, checkUpper, checkLower, checkNum, checkSymb, checkWrongSymb)
+
 	finalCheck := checkLower && checkUpper && checkNum && checkSymb && checkWrongSymb
 	if !finalCheck {
 		models.WarningMsg2 = true // if reqs not met, redirect and try again
@@ -863,17 +905,19 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) { // post action for r
 	salt := sha256.Sum256([]byte(salty))
 	newPass := fmt.Sprintf("%x", h) + fmt.Sprintf("%x", salt)
 
-	userName := r.FormValue("username")
+	userName := r.FormValue("username") // nickname, need to rename vars
 	eMail := r.FormValue("email")
 
+	userName2 := strings.ToLower(userName) // username
+
 	// We insert our nickname, pass and email from inputs to sql table named users
-	insert, err := models.Db.Prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)")
+	insert, err := models.Db.Prepare("INSERT INTO users (username, nickname, password, email) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		log.Println("Error preparing insert statement:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	insert.Exec(userName, newPass, eMail)
+	insert.Exec(userName2,userName, newPass, eMail)
 	defer insert.Close()
 
 	// User data check, if registration went wrong somehow, it should return 500 error code webpage
@@ -923,7 +967,7 @@ func Login(w http.ResponseWriter, r *http.Request) { // handler for html page lo
 func AccLogin(w http.ResponseWriter, r *http.Request) { // post action for login process
 
 	// Data from our website input areas
-	userName := r.FormValue("username")
+	userName := strings.ToLower(r.FormValue("username"))
 	passWord := r.FormValue("password")
 
 	// Getting ID from the username for our further operations, if not found then write messages on the website and try again
@@ -933,6 +977,13 @@ func AccLogin(w http.ResponseWriter, r *http.Request) { // post action for login
 		defer http.Redirect(w, r, "/login", http.StatusSeeOther)
 		models.CheckLoginFail = true
 		models.WarningMsgText = "User not exist, wrong user or password"
+		return
+	}
+
+	var nickname string
+	err = models.Db.QueryRow("SELECT nickname FROM users WHERE username = ?", userName).Scan(&nickname)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
@@ -957,16 +1008,43 @@ func AccLogin(w http.ResponseWriter, r *http.Request) { // post action for login
 		}
 	}
 
+	userGroupFound := ""
+	
+	err = models.Db.QueryRow("SELECT `group` FROM users WHERE id = ?", profileId).Scan(&userGroupFound)
+			if err != nil {
+				log.Println("Error querying database:", err)
+				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+				return
+			}
+
+	models.UserGroup = userGroupFound
+
+	newPass2 := ""
+
+	if len(passWord) >= 6 {
 	h2 := sha256.Sum256([]byte(passWord))
 	salty2 := "ora4vng3"
 	salt2 := sha256.Sum256([]byte(salty2))
-	newPass2 := fmt.Sprintf("%x", h2) + fmt.Sprintf("%x", salt2)
+	newPass2 = fmt.Sprintf("%x", h2) + fmt.Sprintf("%x", salt2)
+	} else {
+		newPass2 = passWord
+	}
+
+	enableAdmin := false
+
+	if userGroupFound == "admins" {
+		enableAdmin = true
+	} else {
+		enableAdmin = false
+	}
 
 	// Logics, in case of successful login
 	if passInDb == newPass2 {
 		MyLogin = true
-		models.LoggedUser = userName // track logged in nickname
+		models.LoggedUser = nickname // track logged in nickname
 		models.UserId = profileId    // track his profile id
+		models.UserGroup = userGroupFound // user group
+		models.CheckAdminRights = enableAdmin
 		models.CheckLoginFail = false
 		models.WarningMsgText = "You're already logged in"
 		CreateSession(w, true) // activating the session
@@ -1015,6 +1093,7 @@ func AccLogout(w http.ResponseWriter, r *http.Request) {
 	models.IsLoggedIn = false
 	models.UserId = 0      // reset profile id
 	models.LoggedUser = "" // reset logged in user's nickname
+	models.CheckAdminRights = false
 
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
@@ -1029,11 +1108,16 @@ func ShowProfile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	vars := mux.Vars(r)
-	w.WriteHeader(http.StatusOK)
+
+	fmt.Println(vars["id"], models.UserId)
+
+	if vars["id"] == strconv.Itoa(int(models.UserId)) { // if its my acc then redirect to my profile page instead of show user page
+		http.Redirect(w, r, "/myprofile/"+ strconv.Itoa(int(models.UserId)), http.StatusFound) 
+	}
 
 	// Logics is simple. We see some number in URL, it's actually our user id. We scan this ID to get nickname
 	user := ""
-	err = models.Db.QueryRow("SELECT username FROM users WHERE id = ?", vars["id"]).Scan(&user)
+	err = models.Db.QueryRow("SELECT nickname FROM users WHERE id = ?", vars["id"]).Scan(&user)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			http.Error(w, "Invalid username", http.StatusUnauthorized)
@@ -1049,6 +1133,16 @@ func ShowProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Group
+	foundGroup := ""
+	err = models.Db.QueryRow("SELECT `group` FROM users WHERE nickname = ?", user).Scan(&foundGroup)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			http.Error(w, "Invalid username", http.StatusUnauthorized)
+			return
+		}
+	}
+
 	toInt, err := strconv.Atoi(vars["id"])
 	if err != nil {
 		log.Println("Error converting str -> int", err)
@@ -1062,15 +1156,20 @@ func ShowProfile(w http.ResponseWriter, r *http.Request) {
 		models.LoginCheck = false
 	}
 
+	fmt.Println(foundGroup, "group")
+
 	ourData := models.Data{
 		IsLoggedIn:  models.IsLoggedIn,
 		ProfileShow: models.LoginCheck,
 		Username:    user,
-		UserId:      uint16(toInt),
+		Admin:       models.CheckAdminRights,
+		OthersId:      uint16(toInt),
+		UserId:     models.UserId,
+		Group: Capitalize(foundGroup),
 		TotalPosts:  uint16(count),
 	}
 
-	vars["id"] = strconv.Itoa(int(ourData.UserId))
+	vars["id"] = strconv.Itoa(int(ourData.OthersId))
 
 	err = t.ExecuteTemplate(w, "profile", ourData)
 	if err != nil {
@@ -1090,12 +1189,16 @@ func ShowMyProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !models.IsLoggedIn {
+		http.Redirect(w,r,"/login", http.StatusSeeOther)
+	}
+
 	vars := mux.Vars(r)
-	w.WriteHeader(http.StatusOK)
+	//w.WriteHeader(http.StatusOK)
 
 	// Who owns this ID
 	user := ""
-	err = models.Db.QueryRow("SELECT username FROM users WHERE id = ?", vars["id"]).Scan(&user)
+	err = models.Db.QueryRow("SELECT nickname FROM users WHERE id = ?", models.UserId).Scan(&user)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			http.Error(w, "Invalid username", http.StatusUnauthorized)
@@ -1103,12 +1206,21 @@ func ShowMyProfile(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	toInt, err := strconv.Atoi(vars["id"])
+	// total posts
+	count := 0
+	err = models.Db.QueryRow("SELECT COUNT(*) FROM posts WHERE user_id = ?", models.UserId).Scan(&count)
+	if err != nil {
+		log.Println("Error querying database:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	/*toInt, err := strconv.Atoi(vars["id"])
 	if err != nil {
 		log.Println("Error converting str -> int", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
-	}
+	}*/
 
 	if models.LoggedUser == user {
 		models.LoginCheck = true
@@ -1116,12 +1228,21 @@ func ShowMyProfile(w http.ResponseWriter, r *http.Request) {
 		models.LoginCheck = false
 	}
 
+
+
 	ourData := models.Data{
 		IsLoggedIn:  models.IsLoggedIn,
 		ProfileShow: models.LoginCheck,
+		Admin:       models.CheckAdminRights,
 		Username:    user,
-		UserId:      uint16(toInt),
+		UserId:      models.UserId,
+		Group:   Capitalize(models.UserGroup),
+		TotalPosts:  uint16(count),
+		WarningMsg: models.WarningMsg2,
+		WarningText: models.WarningTxt,
 	}
+
+	fmt.Println(ourData.UserId, models.UserId, "user ids struct and var")
 
 	vars["id"] = strconv.Itoa(int(ourData.UserId))
 
@@ -1156,9 +1277,29 @@ func ModifyPost(w http.ResponseWriter, r *http.Request) {
 	var data models.EditMsg
 	data.IsLoggedIn = models.IsLoggedIn
 	data.UserId = models.UserId
+	data.Admin = models.CheckAdminRights
 
 	models.SaveVars = vars["id"] // to remember post id
 
+	// check permission, as vars id in url is post id we can check whose post.
+	access := 1
+
+	if !models.CheckAdminRights {
+		postOwner := ""
+		err = models.Db.QueryRow("SELECT user_id FROM posts WHERE id = ?", vars["id"]).Scan(&postOwner)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	if postOwner != strconv.Itoa(int(models.UserId)) {
+		access = -1
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	}
+
+	if access == 1 {
 	// Getting message body having ID from url. We should see message body in the textarea on our website, so we can easily edit the msg.
 	msg := ""
 	err = models.Db.QueryRow("SELECT body FROM posts WHERE id = ?", vars["id"]).Scan(&msg)
@@ -1174,6 +1315,7 @@ func ModifyPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Oops, something went wrong", 404)
 		return
 	}
+}
 }
 
 func ModifyPostButton(w http.ResponseWriter, r *http.Request) {
@@ -1265,4 +1407,88 @@ func AddPost(w http.ResponseWriter, r *http.Request) {
 	toStrIdOfpage := strconv.Itoa(int(threadIdeshka))
 	redirectLocation := "/thread/" + toStrIdOfpage
 	http.Redirect(w, r, redirectLocation, http.StatusSeeOther)
+}
+
+func ModifyPassword (w http.ResponseWriter, r *http.Request) {
+	if !models.IsLoggedIn {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	oldPass := r.FormValue("old-password")
+	newPass := r.FormValue("new-password")
+
+	incorrectPass := false
+
+	currentPassword := ""
+	err := models.Db.QueryRow("SELECT password FROM users WHERE id = ?", models.UserId).Scan(&currentPassword)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			http.Error(w, "Invalid user id", http.StatusUnauthorized)
+			return
+		}
+	}
+
+	h2 := sha256.Sum256([]byte(oldPass))
+	salty2 := "ora4vng3"
+	salt2 := sha256.Sum256([]byte(salty2))
+	currentPassEncrypt := fmt.Sprintf("%x", h2) + fmt.Sprintf("%x", salt2)
+
+	// check if db pass is equal to what user typed
+	if currentPassEncrypt != currentPassword {
+		incorrectPass = true
+	}
+
+	if oldPass == newPass || incorrectPass {
+		models.WarningMsg2 = true 
+	} else {
+		// Password reqs check
+	checkUpper := false
+	checkLower := false
+	checkNum := false
+	checkSymb := false
+	checkWrongSymb := true
+
+	for _, letter := range newPass {
+		switch {
+		case unicode.IsUpper(letter):
+			checkUpper = true
+		case unicode.IsLower(letter):
+			checkLower = true
+		case unicode.IsDigit(letter):
+			checkNum = true
+		case unicode.IsPunct(letter):
+			checkSymb = true
+		case unicode.IsSymbol(letter):
+			checkWrongSymb = false
+		}
+	}
+	finalCheck := checkLower && checkUpper && checkNum && checkSymb && checkWrongSymb
+	if !finalCheck && !models.CheckAdminRights {
+		models.WarningMsg2 = true // if reqs not met, redirect and try again
+		http.Redirect(w, r, "/myprofile/"+strconv.Itoa(int(models.UserId)), http.StatusSeeOther)
+		return
+	}
+
+	fmt.Println(newPass, "ЭТО НОВЫЙ ПАРОЛЬ")
+
+	// Encryption
+	h := sha256.Sum256([]byte(newPass))
+	salty := "ora4vng3"
+	salt := sha256.Sum256([]byte(salty))
+	newPassToDb := fmt.Sprintf("%x", h) + fmt.Sprintf("%x", salt)
+	// Transfer to the db
+		update, err := models.Db.Prepare("UPDATE users SET password = ? WHERE id = ?")
+	if err != nil {
+		log.Println("Error preparing modPost statement:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	update.Exec(newPassToDb, models.UserId)
+	defer update.Close()
+
+	models.WarningMsg2 = false
+	models.WarningTxt = "Password was successfully modified"
+}
+	http.Redirect(w, r, "/myprofile/"+strconv.Itoa(int(models.UserId)), http.StatusSeeOther)
 }

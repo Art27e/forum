@@ -7,6 +7,11 @@
     <p class="welcome-msg"> Welcome, <img src="../img/avatar.png" alt="user avatar" class="avatar-mainpage"> {{ .Username }}! </p>
 </div>
 {{ end }}
+{{ if .Admin }}
+<form action="/mainforum/create" method="get">
+    <button class="website-button-inside" type="submit">Start new forum</button>
+</form>
+{{ end }}
 {{ range .Threads }}
 <div class="show-all-threads">
     <div class="thread-form-container">
@@ -14,6 +19,12 @@
             <a href="/forum/{{ .Id }}"><h1 class="threads-title">{{ .Title }}</h1></a>
         </div>
         <p class="thr-description">{{ .Description }}</p>
+        {{ if $.Admin }}
+        <div class="admin">
+            <a href="/mainforum/{{.Id}}/modify"><p style="color: red; font-size: 13px;">Modify</p></a>
+            <form action="/mainforum/{{.Id}}/del" method="post"><input type="hidden" name="forum-id" value="{{.Id}}"><p onclick="this.parentNode.submit();" style="cursor: pointer; font-size: 13px; color: red;">Delete</p></form>
+        </div>
+        {{ end }}
         <div class="count-posts">
             <p><b>Total Posts: {{ .PostsCount }}</b></p>
             <p><b>Total Topics: {{ .TopicCount }}</b></p>

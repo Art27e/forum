@@ -1,0 +1,29 @@
+{{ define "create_mainthread" }}
+
+{{ template "header" . }}
+
+<script type="text/javascript"> 
+    newPageTitle = 'Forum | Start new forum';
+    document.title = newPageTitle;
+</script>
+
+{{ if .IsLoggedIn }}
+<section id="create-thread">
+<form action="/create-mainforum" method="post">
+    <p class="text-make-thread">Forum name (min chars: 6):</p>
+    <textarea name="forum" id="topic" minlength="6" maxlength="40" required placeholder="Forum name..."></textarea>
+    <p class="text-make-thread">Description (min chars: 8):</p>
+    <textarea name="description" id="topic" minlength="8" maxlength="40" required placeholder="Description..."></textarea>
+    <br>
+    <button class="website-button-inside" type="submit">Submit forum</button>
+</form>
+</section>
+{{ else }}
+<p style="color:red">You are not logged in / no admin rights</p>
+<form action="/login" method="get">
+    <button class="website-button" type="submit">Login</button>
+</form>
+{{ end }}
+{{ template "footer" }}
+
+{{ end }}
