@@ -9,7 +9,7 @@ Forum has main categories with different topics. Main categories cant be edited 
 Forum has groups for users. Standard group - users.<br>
 Admins can delete/edit threads and posts, edit passwords, promote and demote users</p>
 
-#### Dockerfile included.
+#### Dockerfile is included.
 1) ##### Create an image
 > docker build -t YOUR-IMAGE-NAME .
 2) ##### Create and run the container
