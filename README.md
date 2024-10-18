@@ -1,14 +1,16 @@
 # forum
 
-### last update 1.4 (18.08.2024)
+### last update 2.0 (18.10.2024)
 ###### see changes in Changelog.txt
 
-User can register, login, comment, create topics and like posts. Users cant remove posts or topics they created, but its possible to edit posts until a certain time.
-All data is stored in the database (sqlite3)
-Forum has 4 main categories with different topics. Main categories cant be edited by users.
+User can sign up, login, comment, create topics and like posts. Users can edit posts they sent
+All the data is stored in the database (SQLite3)
+Forum has main categories with different topics. Main categories cant be edited by users.
+Forum has groups for users. Standard group - users.
+Admins can delete/edit threads and posts, edit passwords, promote and demote users
 
 #### Dockerfile included.
-1) ##### Create an image 
+1) ##### Create an image
 > docker build -t YOUR-IMAGE-NAME .
 2) ##### Create and run the container
 > docker run --name=YOUR-CONTAINER-NAME -p YOUR-PREFERABLE-PORT:8080 YOUR-IMAGE-NAME
