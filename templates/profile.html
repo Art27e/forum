@@ -10,9 +10,27 @@
 </script>
 
 <section>
-<p>You are viewing profile page of {{ .Username }}</p>
-<p>Acc ID: {{ .UserId }}</p>
-<p>Total Posts:<a href="/acc/profile/{{ .UserId }}/all-posts" target="_blank">{{ .TotalPosts }}</a></p>
+<p style="color:antiquewhite; font-size: 18px">{{ .Username }}</p>
+<p>ID: #{{ .OthersId }}</p>
+<p>User Group: {{ .Group }}</p>
+{{ if .Admin }}
+<form action="/admin/change-user-group" method="POST">
+    <label for="category">Change User Group:</label>
+    <select id="category" name="category">
+        <optgroup label="Promote">
+            <option value="admins">Admins</option>
+            <option value="vip">V.I.P</option>
+        </optgroup>
+        <optgroup label="Demote">
+            <option value="users">Users</option>
+            <option value="banned">Banned</option>
+        </optgroup>
+    </select>
+    <input type="hidden" name="user_id" value= "{{ .OthersId }}">
+    <input type="submit" value="Submit">
+</form>
+{{ end }}
+<p>Total Posts: <a href="/acc/profile/{{ .OthersId }}/all-posts" target="_blank" style="color: rgb(0, 255, 191);">{{ .TotalPosts }}</a></p>
 </section>
 
 {{ template "footer"}}

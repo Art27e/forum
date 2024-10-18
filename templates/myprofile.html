@@ -12,14 +12,30 @@
 {{ if .IsLoggedIn }}
 <img src="../img/avatar.png" alt="user avatar" class="avatar">
 <p class="user-name"> {{ .Username }} </p>
-<p>Your ID: {{ .UserId }} </p>
-<br>
-Change password <p style="color:orange;">Function is under development</p>
-Total Posts: <p style="color:orange;">Function is under development</p>
+<p>ID #{{ .UserId }} </p>
+<p>Group: {{ .Group }}</p>
+<p>Change password</p>
+{{ if .WarningMsg }}
+<p>New password reqs are not followed or its similar to old pass</p>
 {{ else }}
-<p>Please log in</p>
-You are not logged in. You are viewing profile page of: {{ .Username }}. User ID: {{ .UserId }}
-
+{{ .WarningText }}
+{{ end }}
+<form action="/acc/change-pass" method="post">
+    <input style="height: 25px; margin-bottom: 10px;" type="password" name="old-password" id="old-pass" placeholder="Old Password">
+    <style>
+        input::placeholder {
+            color: #888888 !important;
+        }
+        </style>
+    <br>
+    <input style="height: 25px;" type="password" name="new-password" id="new-pass" minlength="6" maxlength="25" placeholder="New Password">
+    <br>
+    <button class="website-button" type="submit">Modify</button>
+</form>
+<div class="total_posts">
+<p>Total Posts: </p>
+<a style="color:aquamarine;" href="/acc/profile/{{ .UserId }}/all-posts" target="_blank">{{ .TotalPosts }}</a>
+</div>
 {{ end }}
 
 {{ template "footer" }}

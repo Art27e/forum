@@ -1,0 +1,21 @@
+{{ define "modify_topic" }}
+
+{{ template "header" . }}
+
+<script type="text/javascript"> 
+    newPageTitle = 'Forum | Edit Topic';
+    document.title = newPageTitle;
+</script>
+
+<section id="create-thread">
+    <form action="/edit-topic" method="post">
+        <p class="text-make-thread">Topic name (min chars: 6):</p>
+        <textarea name="topic" id="topic" minlength="6" maxlength="60">{{.Title}}</textarea>
+        <br>
+        <button class="website-button" type="submit">Make changes</button>
+    </form>
+</section>
+
+{{ template "footer" }}
+
+{{ end }}

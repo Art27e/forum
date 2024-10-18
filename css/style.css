@@ -33,14 +33,33 @@ body {
     margin-top: 10px;
     margin-bottom: 30px;
     height:45px;
-    width:120px;
+    width:auto;
     cursor: pointer;
-    background-color: white;
-    color: black;
+    background-color: transparent;
+    color: aliceblue;
+    font-size: 14px;
     border: 3px solid #4CAF50;
 }
 
 .website-button:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.website-button-inside {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    height: 45px;
+    width: 170px;
+    cursor: pointer;
+    background-color: transparent;
+    color: aliceblue;
+    font-size: 15px;
+    font-weight: bold;
+    border: 3px solid #4CAF50;
+}
+
+.website-button-inside:hover {
     background-color: #4CAF50;
     color: white;
 }
@@ -83,6 +102,16 @@ a {
 
 nav .navigation-link {
     color: white;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0;
+    margin-right: 20px;
+    font-size: 16px;
+    line-height: 30px;
+}
+
+nav .navigation-link-admin {
+    color: rgb(255, 0, 0);
     font-weight: 700;
     text-decoration: none;
     padding: 0;
@@ -230,6 +259,10 @@ nav .navigation-link {
     width: 10%;
     height: 10%;
 }
+
+.total_posts {
+    display: inline-block;
+}
 /*////////////////////////////////////////////////////////*/
 
 /*////////////////////////////////////////////////////////*/
@@ -324,6 +357,18 @@ nav .navigation-link {
 
 /*////////////////////////////////////////////////////////*/
 /* thread.html */
+
+.reply-field {
+    margin-top: 0;
+    padding-top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    color: rgb(66, 206, 15);
+    margin: 0;/*////////////////////////////////////////////////////////*/
+}
+
 .thread-title {
     color: white;
     font-size: 27px;
@@ -341,12 +386,13 @@ nav .navigation-link {
     width: 99%;
     background: rgb(26, 26, 26) 0.9;
     margin-bottom: 20px;
+    margin-top: 0;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
 }
 
 #msg-sep {
     border: 1px solid rgb(0, 140, 255);
-    margin-bottom: 0;
+    margin-bottom: 0px;
     padding-bottom: 0;
 }
 
@@ -385,8 +431,113 @@ nav .navigation-link {
 }
 /*////////////////////////////////////////////////////////*/
 
+/* Admin */
 
+.parent-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; /* Для выравнивания по вертикали */
+    width: 100%; /* Чтобы элементы занимали всю ширину родителя */
+}
 
+.funcs-description {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.funcs-description p {
+    color: aliceblue;
+    flex-basis: 50%;
+}
+
+.search-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.search {
+    width: 150%;
+    height: 50px;
+    max-width: 300px;
+    background: rgba(255, 255, 255, 0.2);
+    text-align: center;
+    color:aliceblue;
+    justify-content: space-between;
+    border-radius: 60px;
+    display: flex;
+}
+
+.search input {
+    background: transparent;
+    border: 0;
+    margin-right: 10px;
+    flex: 1;
+    outline: none;
+    font-size: 15px;
+    color: aliceblue;
+}
+
+::placeholder {
+    color:aliceblue;
+}
+
+.search-button {
+    margin-inline-start: 100%;
+    border: 0;
+    margin-left: 20px;
+    margin-right: 5px;
+    margin-top: 3px;
+    display: grid;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    background: #505a92;
+    cursor: pointer;
+    place-content: center;
+}
+
+.search-button:hover {
+    background:#ea5321;
+}
+
+.search-pic {
+    width: 20px;
+    height: 20px;
+}
+
+/* Change password fields */
+#old-pass {
+    margin-bottom: 10px;
+    height: 25px;
+}
+
+#new-pass {
+    height: 25px;
+}
+
+/* Placeholder */
+/* For modern browsers */
+::placeholder {
+    color: #000000; /* Set your desired color here */
+    opacity: 1; /* Ensures the color is fully opaque */
+}
+
+/* For Mozilla Firefox */
+::-moz-placeholder {
+    color: #000000;
+    opacity: 1;
+}
+
+/* For Internet Explorer 10+ */
+:-ms-input-placeholder {
+    color: #000000;
+}
+
+/* For older versions of Edge */
+::-ms-input-placeholder {
+    color: #000000;
+}
 
 /* Mobile */
 

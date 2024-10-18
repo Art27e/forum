@@ -1,12 +1,13 @@
 package web
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"fmt"
 	"forum/models"
 	"log"
+	"strings"
 	"time"
-	"crypto/rand"
-	"encoding/base64"
 )
 
 func GetCurrentTime() (time.Time, error) {
@@ -37,4 +38,12 @@ func GenerateSessionToken() (string, error) {
         return "", err
     }
     return base64.URLEncoding.EncodeToString(token), nil
+}
+
+func Capitalize(s string) string {
+	if len(s) == 0 {
+		return s
+	} else {
+		return strings.ToUpper(string(s[0])) + s[1:]
+	}
 }

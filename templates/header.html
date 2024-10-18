@@ -19,9 +19,12 @@
         <a class="navigation-link" href="/">Home</a>
          {{ if not .IsLoggedIn }}
         <a class="navigation-link" href="/login">Login</a>
-        <a class="navigation-link" href="/register">Register</a> 
+        <a class="navigation-link" href="/register">Sign Up</a> 
         {{ else }} 
         <a class="navigation-link" href="/myprofile/{{ .UserId }}">My profile</a>
+        {{ if .Admin }}
+        <a class="navigation-link-admin" href="/admin">Admin CP</a>
+        {{ end }}
         <form action="/acc/logout" method="get">
           <a class="navigation-link" href="/acc/logout">Logout</a> 
       </form>

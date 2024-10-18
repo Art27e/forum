@@ -5,7 +5,7 @@ Found its best practice for websites to have login error messages that dont isol
 - NEW! Password requirements. Rewrote functions to check passwords. 
 [Min - 6 symbols, Max - 25 symbols. At least - 1 Upper-case symbol, 1 lower-case symbol, 1 punctuational symbol and 1 number]
 - NEW! sha256 password encryption was added
-- FIX! Cleared project files, removed unnecessary lines of code and files
+- FIX! Code Cleanup and Refactoring
 - FIX! Changed sqlite3 package dependencies, now you dont need to have GCC installed to run the code
 - FIX! Removed session logs in the terminal
 ---------------------------------------
@@ -20,4 +20,14 @@ Found its best practice for websites to have login error messages that dont isol
 but not as strong as cryptographically secure random strings, which can have much higher entropy (e.g., 256 bits or more)
 - NEW! More secured cookies. Prevents JavaScript from accessing the cookie
 - FIX! Removed unnecessary session cookies checks. Now only main page checks for login session cookies.
-- FIX! style.css changes
+- FIX! Frontend Code Cleanup and Refactoring
+---------------------------------------
+----------------v2.0-------------------
+- NEW! Admin CP and Moderation functions.
+- NEW! User Groups
+- NEW! Redesigned Buttons 
+- NEW! My Profile page change password function
+- FIX! Code Cleanup and Refactoring
+- FIX! Login username field is no more case sensitive
+- FIX! Users could edit their and other posts via url combinations
+- FIX! My profile page showed another user information, whos profile u watched before.
