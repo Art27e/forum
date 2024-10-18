@@ -9,6 +9,11 @@ Forum has main categories with different topics. Main categories cant be edited 
 Forum has groups for users. Standard group - users.<br>
 Admins can delete/edit threads and posts, edit passwords, promote and demote users</p>
 
+##### To run app server: 
+> go run .
+or
+> go run server.go
+
 #### Dockerfile is included.
 1) ##### Create an image
 > docker build -t YOUR-IMAGE-NAME .
