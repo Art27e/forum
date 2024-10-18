@@ -25,5 +25,5 @@ Admins can delete/edit threads and posts, edit passwords, promote and demote use
 ##### To delete a Docker image forever: 
 > docker rmi YOUR-IMAGE-NAME
 
-Planning that work on the project will continue
-The project will be updated and all changes will be written here or in a text file attached with project files.
+<p>I plan to continue working on the project.<br>
+The project will be updated, and all changes will be documented either here or in a text file included with the project files.</p>
