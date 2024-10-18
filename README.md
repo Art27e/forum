@@ -11,7 +11,7 @@ Admins can delete/edit threads and posts, edit passwords, promote and demote use
 
 ##### To run app server: 
 > go run .
-or
+##### or
 > go run server.go
 
 #### Dockerfile is included.
@@ -19,7 +19,7 @@ or
 > docker build -t YOUR-IMAGE-NAME .
 2) ##### Create and run the container
 > docker run --name=YOUR-CONTAINER-NAME -p YOUR-PREFERABLE-PORT:8080 YOUR-IMAGE-NAME
-3) ##### Run server using port YOUR-PREFERABLE-PORT
+3) ##### Run server using port [YOUR-PREFERABLE-PORT]
 
 ##### To stop Docker container: 
 > docker stop YOUR-CONTAINER-NAME
