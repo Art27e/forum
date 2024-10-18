@@ -22,7 +22,7 @@ but not as strong as cryptographically secure random strings, which can have muc
 - FIX! Removed unnecessary session cookies checks. Now only main page checks for login session cookies.
 - FIX! Frontend Code Cleanup and Refactoring
 ---------------------------------------
-----------------v2.0-------------------
+----------------v3.0-------------------
 - NEW! Admin CP and Moderation functions.
 - NEW! User Groups
 - NEW! Redesigned Buttons 
