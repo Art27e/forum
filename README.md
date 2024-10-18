@@ -1,13 +1,13 @@
 # forum
 
 ### last update 2.0 (18.10.2024)
-###### see changes in Changelog.txt
+##### see changes in Changelog.txt
 
-User can sign up, login, comment, create topics and like posts. Users can edit posts they sent
-All the data is stored in the database (SQLite3)
-Forum has main categories with different topics. Main categories cant be edited by users.
-Forum has groups for users. Standard group - users.
-Admins can delete/edit threads and posts, edit passwords, promote and demote users
+<p>Users can sign up, login, comment, create topics, like posts, edit posts they sent, and modify their password on My Profile page.<br>
+All the data is stored in the database (SQLite3)<br>
+Forum has main categories with different topics. Main categories cant be edited by users.<br>
+Forum has groups for users. Standard group - users.<br>
+Admins can delete/edit threads and posts, edit passwords, promote and demote users</p>
 
 #### Dockerfile included.
 1) ##### Create an image
