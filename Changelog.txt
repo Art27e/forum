@@ -6,6 +6,7 @@ Found its best practice for websites to have login error messages that dont isol
 [Min - 6 symbols, Max - 25 symbols. At least - 1 Upper-case symbol, 1 lower-case symbol, 1 punctuational symbol and 1 number]
 - NEW! sha256 password encryption was added
 - FIX! Code Cleanup and Refactoring
+- FIX! Code Cleanup and Refactoring
 - FIX! Changed sqlite3 package dependencies, now you dont need to have GCC installed to run the code
 - FIX! Removed session logs in the terminal
 ---------------------------------------
@@ -22,7 +23,7 @@ but not as strong as cryptographically secure random strings, which can have muc
 - FIX! Removed unnecessary session cookies checks. Now only main page checks for login session cookies.
 - FIX! Frontend Code Cleanup and Refactoring
 ---------------------------------------
-----------------v3.0-------------------
+----------------v2.0-------------------
 - NEW! Admin CP and Moderation functions.
 - NEW! User Groups
 - NEW! Redesigned Buttons 
@@ -31,3 +32,4 @@ but not as strong as cryptographically secure random strings, which can have muc
 - FIX! Login username field is no more case sensitive
 - FIX! Users could edit their and other posts via url combinations
 - FIX! My profile page showed another user information, whos profile u watched before.
+- FIX! Frontend Code Cleanup and Refactoring
