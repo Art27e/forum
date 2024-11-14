@@ -32,12 +32,12 @@ func ClearData(tableName string) {
 }
 
 func GenerateSessionToken() (string, error) {
-    token := make([]byte, 32) // 32 bytes = 256 bits
-    _, err := rand.Read(token)
-    if err != nil {
-        return "", err
-    }
-    return base64.URLEncoding.EncodeToString(token), nil
+	token := make([]byte, 32) // 32 bytes = 256 bits
+	_, err := rand.Read(token)
+	if err != nil {
+		return "", err
+	}
+	return base64.URLEncoding.EncodeToString(token), nil
 }
 
 func Capitalize(s string) string {

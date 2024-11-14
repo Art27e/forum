@@ -3,17 +3,16 @@ package web
 import (
 	"fmt"
 	"forum/models"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"text/template"
-	"github.com/gorilla/mux"
 	"strconv"
+	"text/template"
 )
 
-func Admin (w http.ResponseWriter, r *http.Request) {
+func Admin(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("templates/admin.html", "templates/header.html", "templates/footer.html")
 	if err != nil {
-		log.Println("Error parsing template files:", err)
 		http.Error(w, "Internal Problem", http.StatusInternalServerError)
 		return
 	}
@@ -30,41 +29,37 @@ func Admin (w http.ResponseWriter, r *http.Request) {
 	data.IsLoggedIn = models.LoginCheck
 
 	// Fetch search query if provided
-	log.Println("Received request for admin page, query:", r.URL.Query().Get("query"))
-    query := r.URL.Query().Get("query")
-   /* if query != "" {*/
-        // Create the SQL pattern for searching
-        searchPattern := "%" + query + "%"
+	query := r.URL.Query().Get("query")
+	
+	// Create the SQL pattern for searching
+	searchPattern := "%" + query + "%"
 
-        // Fetch matching users from the database
-        rows, err := models.Db.Query(`SELECT id, username FROM users WHERE username LIKE ?`, searchPattern)
-        if err != nil {
-            http.Error(w, "Error fetching users", http.StatusInternalServerError)
-            return
-        }
-        defer rows.Close()
+	// Fetch matching users from the database
+	rows, err := models.Db.Query(`SELECT id, username FROM users WHERE username LIKE ?`, searchPattern)
+	if err != nil {
+		http.Error(w, "Error fetching users", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
 
-         // Use []models.User instead of []map[string]interface{}
-		 var users []models.User
-		 for rows.Next() {
-			 var id int
-			 var username string
-			 if err := rows.Scan(&id, &username); err != nil {
-				 http.Error(w, "Error scanning users", http.StatusInternalServerError)
-				 return
-			 }
-			 users = append(users, models.User{Id: uint16(id), Username: username})
-		 }
-       data.Users = users
-
-		err = t.ExecuteTemplate(w, "admin_panel", data)
-		if err != nil {
-			log.Println("Error executing template:", err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	var users []models.User
+	for rows.Next() {
+		var id int
+		var username string
+		if err := rows.Scan(&id, &username); err != nil {
+			http.Error(w, "Error scanning users", http.StatusInternalServerError)
 			return
 		}
+		users = append(users, models.User{Id: uint16(id), Username: username})
 	}
+	data.Users = users
 
+	err = t.ExecuteTemplate(w, "admin_panel", data)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+}
 
 func CreateMainForum(w http.ResponseWriter, r *http.Request) { // main thread create for admin rights
 	t, err := template.ParseFiles("templates/createmainthread.html", "templates/header.html", "templates/footer.html")
@@ -124,7 +119,7 @@ func CreateMForum(w http.ResponseWriter, r *http.Request) { // main thread creat
 	http.Redirect(w, r, redirectTo, http.StatusSeeOther)
 }
 
-func ModifyMThreadPage (w http.ResponseWriter, r *http.Request) {
+func ModifyMThreadPage(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("templates/modifymainthread.html", "templates/header.html", "templates/footer.html")
 	if err != nil {
 		log.Println("Error parsing template files:", err)
@@ -133,11 +128,7 @@ func ModifyMThreadPage (w http.ResponseWriter, r *http.Request) {
 	}
 
 	vars := mux.Vars(r)
-
 	urlId := vars["id"]
-
-	fmt.Println(urlId)
-
 	models.SaveVars = urlId
 
 	if !models.CheckAdminRights {
@@ -146,17 +137,16 @@ func ModifyMThreadPage (w http.ResponseWriter, r *http.Request) {
 	}
 
 	description := ""
-		err = models.Db.QueryRow("SELECT description FROM main_threads WHERE id = ?", urlId).Scan(&description)
-		if err != nil {
-			fmt.Println("Позже сделать ошибку")
-		}
+	err = models.Db.QueryRow("SELECT description FROM main_threads WHERE id = ?", urlId).Scan(&description)
+	if err != nil {
+		fmt.Println("Позже сделать ошибку")
+	}
 
-		title := ""
-		err = models.Db.QueryRow("SELECT title FROM main_threads WHERE id = ?", urlId).Scan(&title)
-		if err != nil {
-			fmt.Println("Позже сделать ошибку")
-		}
-
+	title := ""
+	err = models.Db.QueryRow("SELECT title FROM main_threads WHERE id = ?", urlId).Scan(&title)
+	if err != nil {
+		fmt.Println("Позже сделать ошибку")
+	}
 
 	data := models.Thread{}
 
@@ -174,7 +164,7 @@ func ModifyMThreadPage (w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func ModMThread (w http.ResponseWriter, r *http.Request) {
+func ModMThread(w http.ResponseWriter, r *http.Request) {
 
 	if !models.IsLoggedIn {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -196,7 +186,7 @@ func ModMThread (w http.ResponseWriter, r *http.Request) {
 
 }
 
-func DeletePost (w http.ResponseWriter, r *http.Request) {
+func DeletePost(w http.ResponseWriter, r *http.Request) {
 	if !models.IsLoggedIn {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
@@ -210,15 +200,15 @@ func DeletePost (w http.ResponseWriter, r *http.Request) {
 
 	query := "DELETE FROM posts WHERE id = ?"
 	_, err := models.Db.Exec(query, postId)
-    if err != nil {
-        fmt.Println("Error executing DELETE query:", err)
-        return
-    }
-	
+	if err != nil {
+		fmt.Println("Error executing DELETE query:", err)
+		return
+	}
+
 	http.Redirect(w, r, "/thread/"+strconv.Itoa(int(models.FollowThreadId)), http.StatusSeeOther)
 }
 
-func EditTopicPage (w http.ResponseWriter, r *http.Request) {
+func EditTopicPage(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("templates/modifytopic.html", "templates/header.html", "templates/footer.html")
 	if err != nil {
 		log.Println("Error parsing template files:", err)
@@ -236,21 +226,20 @@ func EditTopicPage (w http.ResponseWriter, r *http.Request) {
 	}
 
 	vars := mux.Vars(r)
-
 	urlId := vars["id"]
 
 	data := models.Thread{}
 
 	topicTitle := ""
-		err = models.Db.QueryRow("SELECT title FROM threads WHERE id = ?", urlId).Scan(&topicTitle)
-		if err != nil {
-			fmt.Println("Позже сделать ошибку")
-		}
+	err = models.Db.QueryRow("SELECT title FROM threads WHERE id = ?", urlId).Scan(&topicTitle)
+	if err != nil {
+		fmt.Println("Позже сделать ошибку")
+	}
 
 	data.Title = topicTitle
 	models.SaveVars = urlId
 
-	err = t.ExecuteTemplate(w, "modify_topic",data)
+	err = t.ExecuteTemplate(w, "modify_topic", data)
 	if err != nil {
 		log.Println("Error executing template:", err)
 		http.Error(w, "Oops, something went wrong", 404)
@@ -258,7 +247,7 @@ func EditTopicPage (w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func EditTopic (w http.ResponseWriter, r *http.Request) {
+func EditTopic(w http.ResponseWriter, r *http.Request) {
 	if !models.IsLoggedIn {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
@@ -289,38 +278,35 @@ func EditTopic (w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/forum/"+strconv.Itoa(int(threadIdForRedirect)), http.StatusSeeOther)
 }
 
-func SearchUser (w http.ResponseWriter, r *http.Request) {
+func SearchUser(w http.ResponseWriter, r *http.Request) {
 	if !models.CheckAdminRights {
 		http.NotFound(w, r)
 	}
 
-	log.Println("Received request at /admin/search")
+	// Get the selected username from the form
+	username := r.FormValue("query")
 
-    // Get the selected username from the form
-    username := r.FormValue("query")
-    log.Println("Search query received:", username)
+	// Check if the username is not empty
+	if username == "" {
+		log.Println("No username provided")
+		http.Error(w, "No username provided", http.StatusBadRequest)
+		return
+	}
 
-    // Check if the username is not empty
-    if username == "" {
-        log.Println("No username provided")
-        http.Error(w, "No username provided", http.StatusBadRequest)
-        return
-    }
+	// Query the database for the user ID based on the username
+	var id int
+	err := models.Db.QueryRow(`SELECT id FROM users WHERE username = ?`, username).Scan(&id)
+	if err != nil {
+		log.Println("Error fetching user ID:", err)
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
 
-    // Query the database for the user ID based on the username
-    var id int
-    err := models.Db.QueryRow(`SELECT id FROM users WHERE username = ?`, username).Scan(&id)
-    if err != nil {
-        log.Println("Error fetching user ID:", err)
-        http.Error(w, "User not found", http.StatusNotFound)
-        return
-    }
-
-    // Redirect to the user's profile page
-    http.Redirect(w, r, fmt.Sprintf("/acc/profile/%d", id), http.StatusFound)
+	// Redirect to the user's profile page
+	http.Redirect(w, r, fmt.Sprintf("/acc/profile/%d", id), http.StatusFound)
 }
 
-func ChangeUserGroup (w http.ResponseWriter, r *http.Request) {
+func ChangeUserGroup(w http.ResponseWriter, r *http.Request) {
 	if !models.CheckAdminRights {
 		http.NotFound(w, r)
 	}
@@ -340,7 +326,7 @@ func ChangeUserGroup (w http.ResponseWriter, r *http.Request) {
 		_, err := models.Db.Exec(query)
 		if err != nil {
 			panic(err)
-		}	
+		}
 	case "users":
 		query := fmt.Sprintf(`UPDATE 'users' SET 'group' = 'users' WHERE id IS (%s);`, userId)
 		_, err := models.Db.Exec(query)
@@ -355,44 +341,41 @@ func ChangeUserGroup (w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	http.Redirect(w, r, "/acc/profile/" + userId, http.StatusFound)
+	http.Redirect(w, r, "/acc/profile/"+userId, http.StatusFound)
 }
 
-
-func DeleteMThread (w http.ResponseWriter, r *http.Request) {
+func DeleteMThread(w http.ResponseWriter, r *http.Request) {
 	if !models.CheckAdminRights {
 		http.NotFound(w, r)
 	}
 
 	forumId := r.FormValue("forum-id")
 
-
 	query := "DELETE FROM main_threads WHERE id = ?"
 	_, err := models.Db.Exec(query, forumId)
-    if err != nil {
-        fmt.Println("Error executing DELETE query:", err)
-        return
-    }
+	if err != nil {
+		fmt.Println("Error executing DELETE query:", err)
+		return
+	}
 
 	query2 := "DELETE FROM threads WHERE mainthread_id = ?"
 	_, err = models.Db.Exec(query2, forumId)
-    if err != nil {
-        fmt.Println("Error executing DELETE query:", err)
-        return
-    }
+	if err != nil {
+		fmt.Println("Error executing DELETE query:", err)
+		return
+	}
 
 	query3 := "DELETE FROM posts WHERE mainthread_id = ?"
 	_, err = models.Db.Exec(query3, forumId)
-    if err != nil {
-        fmt.Println("Error executing DELETE query:", err)
-        return
-    }
-
+	if err != nil {
+		fmt.Println("Error executing DELETE query:", err)
+		return
+	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-func DeleteThread (w http.ResponseWriter, r *http.Request) {
+func DeleteThread(w http.ResponseWriter, r *http.Request) {
 	if !models.CheckAdminRights {
 		http.NotFound(w, r)
 	}
@@ -412,17 +395,17 @@ func DeleteThread (w http.ResponseWriter, r *http.Request) {
 
 	query := "DELETE FROM threads WHERE id = ?"
 	_, err = models.Db.Exec(query, topicId)
-    if err != nil {
-        fmt.Println("Error executing DELETE query:", err)
-        return
-    }
+	if err != nil {
+		fmt.Println("Error executing DELETE query:", err)
+		return
+	}
 
 	query2 := "DELETE FROM posts WHERE thread_id = ?"
 	_, err = models.Db.Exec(query2, topicId)
-    if err != nil {
-        fmt.Println("Error executing DELETE query:", err)
-        return
-    }
+	if err != nil {
+		fmt.Println("Error executing DELETE query:", err)
+		return
+	}
 
 	http.Redirect(w, r, "/forum/"+strconv.Itoa(int(threadIdForRedirect)), http.StatusSeeOther)
 }

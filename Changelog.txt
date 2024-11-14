@@ -33,3 +33,6 @@ but not as strong as cryptographically secure random strings, which can have muc
 - FIX! Users could edit their and other posts via url combinations
 - FIX! My profile page showed another user information, whos profile u watched before.
 - FIX! Frontend Code Cleanup and Refactoring
+---------------------------------------
+----------------v2.1-------------------
+- FIX! Code Cleanup and Refactoring

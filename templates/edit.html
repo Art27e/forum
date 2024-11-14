@@ -2,9 +2,6 @@
 
 {{ template "header" . }}
 
-
-
-<!-- Body -->
 <form action="/post/edit" method="post" autocomplete="off">
 <textarea name="edit-post-textarea" id="edit-post-textarea" cols="30" rows="10" minlength="4" maxlength="1300">{{ .Body }}</textarea>
 <br>

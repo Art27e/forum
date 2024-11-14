@@ -1,6 +1,6 @@
 # forum
 #### Go Web App
-### last update 2.0 (18.10.2024)
+### Current version: 2.1 (14.11.2024)
 #### see changes in Changelog.txt
 
 <p>Users can sign up, login, comment, create topics, like posts, edit posts they sent, and modify their password on My Profile page.<br>
