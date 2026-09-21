@@ -1,5 +1,9 @@
 # Go Forum
 
+<img src="https://i.ibb.co/bg0JQ4vD/image-2026-09-21-21-26-01.png" alt="Home page" width="500" height="300">
+<img src="https://i.ibb.co/0RNcRM0T/image-2026-09-21-21-23-45.png" alt="Home page" width="500" height="300">
+<img src="https://i.ibb.co/GQ0yJ7y3/image-2026-09-21-21-30-51.png" alt="Home page" width="500" height="300">
+
 A server-rendered forum application built with Go, Gorilla Mux, SQLite, and HTML templates. The project demonstrates the core workflows of a classic discussion board: account registration, login/logout, forum categories, topics, replies, likes, editable content, profiles, user groups, and an admin control panel.
 
 Current version: **2.1.1**  
