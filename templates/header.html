@@ -5,30 +5,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> Forum | Homepage </title>
+    <title>Forum | Homepage</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet" />
-    <link rel="icon" type="image/x-icon" href="/img/favicon.png">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/x-icon" href="/img/favicon.png" />
   </head>
   <body>
     <header class="site-header">
-      <a href="/"><h1 class="logo">Forum in Go</h1></a>
+      <div class="img-container">
+        <img id="ae-logo" src="/img/AE.png" alt="ae" />
+        <img id="website-logo" src="/img/Web Forum in Go.png" alt="web-logo" />
+      </div>
       <nav class="navigation-bar">
         <a class="navigation-link" href="/">Home</a>
-         {{ if not .IsLoggedIn }}
+        {{ if not .IsLoggedIn }}
         <a class="navigation-link" href="/login">Login</a>
-        <a class="navigation-link" href="/register">Sign Up</a> 
-        {{ else }} 
-        <a class="navigation-link" href="/myprofile/{{ .UserId }}">My profile</a>
+        <a class="navigation-link" href="/register">Sign Up</a>
+        {{ else }}
+        <a class="navigation-link" href="/myprofile/{{ .UserId }}"
+          >My profile</a
+        >
         {{ if .Admin }}
         <a class="navigation-link-admin" href="/admin">Admin CP</a>
         {{ end }}
         <form action="/acc/logout" method="get">
-          <a class="navigation-link" href="/acc/logout">Logout</a> 
-      </form>
-        {{ end }} 
+          <a class="navigation-link" href="/acc/logout">Logout</a>
+        </form>
+        {{ end }}
       </nav>
     </header>
     {{ end }}
+  </body>
+</html>
