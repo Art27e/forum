@@ -36,3 +36,5 @@ but not as strong as cryptographically secure random strings, which can have muc
 ---------------------------------------
 ----------------v2.1-------------------
 - FIX! Code Cleanup and Refactoring
+----------------v2.1.1-------------------
+- NEW! New icons and headers

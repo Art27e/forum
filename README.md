@@ -1,34 +1,165 @@
-# forum
-#### Go Web App
-### Current version: 2.1 (14.11.2024)
-#### see changes in Changelog.txt
+# Go Forum
 
-<p>Users can sign up, login, comment, create topics, like posts, edit posts they sent, and modify their password on My Profile page.<br>
-All the data is stored in the database (SQLite3)<br>
-Forum has main categories with different topics. Main categories cant be edited by users.<br>
-Forum has groups for users. Standard group - users.<br>
-Admins can delete/edit threads and posts, edit passwords, promote and demote users</p>
+A server-rendered forum application built with Go, Gorilla Mux, SQLite, and HTML templates. The project demonstrates the core workflows of a classic discussion board: account registration, login/logout, forum categories, topics, replies, likes, editable content, profiles, user groups, and an admin control panel.
 
-##### To run app server: 
-> go run .
-##### or
-> go run server.go
+Current version: **2.1.1**  
+See [Changelog.txt](Changelog.txt) for version history.
 
-#### Dockerfile is included.
-1) ##### Create an image
-> docker build -t YOUR-IMAGE-NAME .
-2) ##### Create and run the container
-> docker run --name=YOUR-CONTAINER-NAME -p YOUR-PREFERABLE-PORT:8080 YOUR-IMAGE-NAME
-3) ##### Run server using port [YOUR-PREFERABLE-PORT]
+## Why this project exists
 
-##### To stop Docker container: 
-> docker stop YOUR-CONTAINER-NAME
-##### To start again Docker container: 
-> docker start YOUR-CONTAINER-NAME
-##### To delete Docker container forever: 
-> docker rm YOUR-CONTAINER-NAME
-##### To delete a Docker image forever: 
-> docker rmi YOUR-IMAGE-NAME
+I built this project to practice full-stack web development in Go without hiding the application behind a large framework. The code shows routing, request handling, HTML template rendering, SQL persistence, session cookies, role-based behavior, and Docker-based deployment in a compact codebase that reviewers can inspect quickly.
 
-<p>I plan to continue working on the project.<br>
-The project will be updated, and all changes will be documented either here or in a text file included with the project files.</p>
+## Features
+
+- User registration and login
+- HTTPS local server with secure, HTTP-only session cookies
+- Password validation and hashed password storage
+- Forum categories, topics, and posts
+- Post creation, editing, deletion, and likes
+- Public user profiles and "all posts by user" pages
+- Personal profile page with password change flow
+- Admin control panel
+- User search and user group management
+- Admin moderation for categories, topics, and posts
+- SQLite database stored in `db/forum.db`
+- Dockerfile for containerized runs
+
+## Tech Stack
+
+- **Language:** Go 1.20
+- **Router:** Gorilla Mux
+- **Database:** SQLite via `modernc.org/sqlite`
+- **Frontend:** HTML, CSS, static assets
+- **Deployment:** Docker
+
+## Quick Start
+
+### Prerequisites
+
+- Go 1.20 or newer
+- A browser that can open a local HTTPS development certificate
+
+### Run locally
+
+```bash
+go run .
+```
+
+Then open:
+
+```text
+https://localhost:8080/
+```
+
+The app uses the included local certificate files:
+
+- `localhost+1.pem`
+- `localhost+1-key.pem`
+
+Your browser may show a local certificate warning. This is expected for a development certificate.
+
+## Docker
+
+Build the image:
+
+```bash
+docker build -t go-forum .
+```
+
+Run the container:
+
+```bash
+docker run --name go-forum -p 8080:8080 go-forum
+```
+
+Then visit:
+
+```text
+https://localhost:8080/
+```
+
+Useful Docker commands:
+
+```bash
+docker stop go-forum
+docker start go-forum
+docker rm go-forum
+docker rmi go-forum
+```
+
+## Project Structure
+
+```text
+.
+|-- server.go              # App entry point, route registration, static files, HTTPS server
+|-- models/
+|   `-- storedata.go       # Shared data structs and database handle
+|-- web/
+|   |-- handlers.go        # Main forum, auth, profile, post, and like handlers
+|   |-- admin.go           # Admin panel and moderation handlers
+|   `-- functions.go       # Shared helper functions
+|-- templates/             # Go HTML templates
+|-- css/                   # Stylesheets
+|-- img/                   # Images and favicon
+|-- fonts/                 # Local fonts
+|-- static/                # Additional static assets
+|-- db/
+|   `-- forum.db           # SQLite database
+|-- Dockerfile
+|-- go.mod
+|-- go.sum
+`-- Changelog.txt
+```
+
+## Application Flow
+
+1. `server.go` opens the SQLite database and registers all HTTP routes.
+2. Static assets are served from `css`, `img`, `fonts`, and `static`.
+3. Handlers in `web/handlers.go` manage forum browsing, registration, login, profiles, posts, and likes.
+4. Handlers in `web/admin.go` manage admin-only moderation and user group actions.
+5. Templates in `templates/` render the server-side HTML responses.
+
+## Reviewer Notes
+
+Good places to start when reviewing the code:
+
+- [server.go](server.go) for routing and app startup
+- [web/handlers.go](web/handlers.go) for the main user-facing workflows
+- [web/admin.go](web/admin.go) for admin and moderation behavior
+- [models/storedata.go](models/storedata.go) for the main data structures
+- [templates/header.html](templates/header.html) for navigation state based on login/admin status
+
+The project intentionally keeps the architecture simple so the request flow is easy to follow. It is a practical portfolio project rather than a production-ready forum platform.
+
+## Security-Related Work Included
+
+- HTTPS local development server
+- Secure and HTTP-only cookies
+- Cryptographically random session token generation
+- Case-insensitive username login handling
+- Generic login failure message
+- Password complexity checks
+- Hashed passwords
+- Authorization checks for editing posts
+
+## Current Limitations and Future Improvements
+
+The next improvements I would prioritize are:
+
+- Add automated tests for handlers, auth flows, and admin actions
+- Move session and login state away from package-level global variables
+- Add database migrations instead of creating tables inside request handlers
+- Improve SQL consistency and reduce repeated query logic
+- Add CSRF protection for form submissions
+- Add environment-based configuration for port, database path, and certificate files
+- Improve Docker image size with a multi-stage build
+
+## Version History
+
+- **v2.1.1** - new icons and headers were added
+- **v2.1** - code cleanup and refactoring
+- **v2.0** - admin control panel, moderation functions, user groups, profile password changes, and permission fixes
+- **v1.4** - HTTPS support, secure cookies, improved session token generation
+- **v1.2** - password requirements, hashed passwords, and SQLite dependency cleanup
+
+Full details are available in [Changelog.txt](Changelog.txt).
